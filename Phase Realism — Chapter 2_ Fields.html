@@ -1,0 +1,571 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phase Realism — Chapter 2: Fields</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;600;700&display=swap">
+
+<style>
+:root {
+  --bg:              #faf8f4;
+  --bg-alt:          #f2ede6;
+  --fg:              #1c2830;
+  --fg-muted:        #4a5660;
+  --fg-subtle:       #7e8c97;
+  --accent:          #2c5a8a;
+  --accent-lt:       #e8f0f9;
+  --teacher-bg:      #fffbf0;
+  --teacher-border:  #c8992a;
+  --teacher-label:   #8a6610;
+  --divider:         #ddd8cf;
+  --vocab-bg:        #f0ece6;
+  --try-bg:          #e8eff8;
+  --try-border:      #2c5a8a;
+  --key-bg:          #edf3fb;
+  --key-border:      #2c5a8a;
+
+  --font-display:    'Lora', Georgia, serif;
+  --font-body:       'Lora', Georgia, serif;
+  --font-ui:         'Source Sans 3', system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:              #161e25;
+    --bg-alt:          #1c2530;
+    --fg:              #e0d9cf;
+    --fg-muted:        #9eaab5;
+    --fg-subtle:       #607080;
+    --accent:          #5e96cc;
+    --accent-lt:       #1a2c3d;
+    --teacher-bg:      #1e1b0e;
+    --teacher-border:  #c8992a;
+    --teacher-label:   #d4a830;
+    --divider:         #28363e;
+    --vocab-bg:        #1c2530;
+    --try-bg:          #192536;
+    --try-border:      #4a7aae;
+    --key-bg:          #1a2535;
+    --key-border:      #4a7aae;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:              #161e25;
+  --bg-alt:          #1c2530;
+  --fg:              #e0d9cf;
+  --fg-muted:        #9eaab5;
+  --fg-subtle:       #607080;
+  --accent:          #5e96cc;
+  --accent-lt:       #1a2c3d;
+  --teacher-bg:      #1e1b0e;
+  --teacher-border:  #c8992a;
+  --teacher-label:   #d4a830;
+  --divider:         #28363e;
+  --vocab-bg:        #1c2530;
+  --try-bg:          #192536;
+  --try-border:      #4a7aae;
+  --key-bg:          #1a2535;
+  --key-border:      #4a7aae;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.78;
+  margin: 0;
+  padding-left:  max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 5rem;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--bg);
+}
+
+/* ── Toolbar ───────────────────────────────────────────────── */
+.toolbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--divider);
+  padding-block: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.toolbar-series {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+.toolbar-chapter {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+}
+.toggle-btn {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.28rem 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.toggle-btn:hover { background: var(--accent-lt); }
+.toggle-btn.dimmed { border-color: var(--divider); color: var(--fg-subtle); }
+.toggle-btn.dimmed:hover { background: var(--bg-alt); }
+
+/* ── Content wrapper ───────────────────────────────────────── */
+.content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-top: 3.5rem;
+}
+
+/* ── Bridge / preface ──────────────────────────────────────── */
+.preface {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-lt);
+  border-radius: 0 6px 6px 0;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 2.5rem;
+  font-size: 0.97rem;
+  color: var(--fg-muted);
+}
+.preface p { margin: 0.5rem 0; }
+.preface p:first-of-type { margin-top: 0; }
+.preface p:last-child { margin-bottom: 0; }
+.preface-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+/* ── Chapter header ────────────────────────────────────────── */
+.chapter-header { margin-bottom: 2.5rem; }
+.chapter-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.45rem;
+}
+.chapter-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0 0 1.5rem;
+}
+.chapter-rule {
+  border: none;
+  border-top: 1px solid var(--divider);
+}
+
+/* ── Section ───────────────────────────────────────────────── */
+.section { margin-bottom: 0; }
+.section-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+  margin-bottom: 0.3rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 1.25rem;
+  text-wrap: balance;
+}
+
+.student-text p {
+  margin: 0 0 1.05em;
+  min-width: 0;
+}
+.student-text p:last-child { margin-bottom: 0; }
+.student-text strong { color: var(--fg); font-weight: 700; }
+
+/* ── Key idea ──────────────────────────────────────────────── */
+.key-idea {
+  background: var(--key-bg);
+  border-left: 3px solid var(--key-border);
+  padding: 0.75rem 1.1rem;
+  margin: 1.6rem 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  border-radius: 0 5px 5px 0;
+}
+
+/* ── Teacher note ──────────────────────────────────────────── */
+.teacher-note {
+  background: var(--teacher-bg);
+  border-left: 3px solid var(--teacher-border);
+  border-radius: 0 6px 6px 0;
+  padding: 1.05rem 1.25rem;
+  margin: 1.5rem 0 0;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--fg-muted);
+}
+.teacher-note-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teacher-label);
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.teacher-note-label::before {
+  content: "◆";
+  font-size: 0.55rem;
+}
+.teacher-note p {
+  margin: 0 0 0.75em;
+  min-width: 0;
+}
+.teacher-note p:last-child { margin-bottom: 0; }
+.teacher-note strong { color: var(--teacher-label); font-weight: 700; }
+.teacher-note em { font-style: italic; }
+
+/* ── Section divider ───────────────────────────────────────── */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--divider);
+  margin: 2.75rem 0;
+}
+
+/* ── Vocab box ─────────────────────────────────────────────── */
+.vocab-box {
+  background: var(--vocab-bg);
+  border-radius: 6px;
+  padding: 1.25rem 1.4rem;
+  margin: 2.5rem 0;
+}
+.vocab-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+  margin-bottom: 0.9rem;
+}
+.vocab-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.vocab-list li {
+  font-size: 0.925rem;
+  line-height: 1.55;
+  min-width: 0;
+}
+.vocab-term {
+  font-style: italic;
+  font-weight: 700;
+  margin-right: 0.15em;
+  color: var(--fg);
+}
+.vocab-def { color: var(--fg-muted); }
+
+/* ── Try this box ──────────────────────────────────────────── */
+.try-box {
+  background: var(--try-bg);
+  border-left: 3px solid var(--try-border);
+  border-radius: 0 6px 6px 0;
+  padding: 1.2rem 1.4rem;
+  margin: 2rem 0;
+}
+.try-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.9rem;
+}
+.try-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  counter-reset: try;
+}
+.try-list li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  min-width: 0;
+  counter-increment: try;
+}
+.try-list li::before {
+  content: counter(try);
+  flex-shrink: 0;
+  width: 1.45rem;
+  height: 1.45rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.72rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.12rem;
+}
+
+/* ── Chapter nav ───────────────────────────────────────────── */
+.chapter-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--divider);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+.nav-prev { color: var(--fg-muted); font-weight: 400; }
+.nav-position { color: var(--fg-subtle); font-size: 0.78rem; }
+.nav-next { color: var(--accent); font-weight: 700; }
+</style>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <span class="toolbar-series">Phase Realism · Elementary</span>
+  <span class="toolbar-chapter">Chapter 2: Fields</span>
+  <button class="toggle-btn" id="toggleBtn">Hide Teacher Notes</button>
+</div>
+
+<div class="content">
+
+  <!-- Bridge -->
+  <div class="preface">
+    <div class="preface-eyebrow">Connecting to Chapter 1</div>
+    <p>In Chapter 1, we learned that things are in states — that a state is the way something is behaving right now, under the conditions it's in.</p>
+    <p>But we didn't ask: what sets the conditions? Where do they come from?</p>
+    <p>That's what this chapter is about.</p>
+  </div>
+
+  <!-- Chapter Header -->
+  <div class="chapter-header">
+    <div class="chapter-eyebrow">Chapter 2 · Unit 2: Fields</div>
+    <h1 class="chapter-title">The Invisible Condition</h1>
+    <hr class="chapter-rule">
+  </div>
+
+  <!-- ─── Section 2.1 ──────────────────────────────────────── -->
+  <div class="section" style="margin-top: 2rem;">
+    <div class="section-eyebrow">Section 2.1</div>
+    <h2 class="section-title">Something Is Setting the Conditions</h2>
+    <div class="student-text">
+      <p>You've dropped something. Maybe by accident, maybe on purpose. It fell. You didn't push it down. Nothing visible grabbed it. And yet — it fell.</p>
+      <p>Something made it fall. Something you can't see, that extends through the room and the building and all the way through the Earth, pulling everything inside it in the same direction, at the same time.</p>
+      <p>That something is a field.</p>
+      <p>Gravity is a field. You, the chair, the glass on the table, the air in the room — all of it is inside the gravitational field right now, all of it affected, all at once. The field doesn't have to touch anything to work. It just has to be there. And when it's there, everything inside it responds.</p>
+      <p>You can't see gravity. But you can see — and feel — everything it does. Every step you take, every thing you pick up, every thing that falls: that's a field at work, invisibly, constantly.</p>
+    </div>
+
+    <div class="key-idea">
+      A field is a condition that extends through space and affects everything inside it.
+    </div>
+
+    <div class="student-text">
+      <p>Fields don't need to touch things to affect them. They don't need to be seen. They just need to be present — and when they are, everything in them responds.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 2.1 -->
+  <div class="teacher-note" id="note-2-1">
+    <div class="teacher-note-label">Teacher's Notation — Section 2.1</div>
+    <p><strong>The ontological move:</strong> We are establishing that fields are primary. They exist independently, extend through space, and act on everything inside them without contact. This is not the usual framing. Standard curriculum introduces gravity as "a force between two objects with mass." That framing is downstream — it describes what the field does to specific things, not what the field is. We're going the other way: field first, effects second.</p>
+    <p><strong>Why gravity first:</strong> Students have embodied, inescapable experience of it. They have never been outside a gravitational field. This makes it the best introduction — it names something students already live inside, not something they're abstracting toward.</p>
+    <p><strong>The long arc:</strong> At Level 3, particle will be introduced as a stable configuration within a field — not as a fundamental thing, but as a persistent pattern in field behavior. The groundwork for that understanding is being laid right here. Don't preview it. Let the sequence do the work.</p>
+    <p><strong>A note on "invisible":</strong> The word is doing important work. It explicitly names the fact that the most foundational conditions in the world are not directly visible. This is a subtle but significant epistemological point: the primary level of reality is not the one you can see. Students will carry this forward.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 2.2 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 2.2</div>
+    <h2 class="section-title">What a Field Does</h2>
+    <div class="student-text">
+      <p>Think about the room you're sitting in right now.</p>
+      <p>It has a temperature. Not just in one spot — distributed through the whole space. The air near the window is a little cooler. The air near the lamp is a little warmer. But all of it is inside the same temperature field. And everything in that field responds to it at the same time: your skin, the table, the glass of water sitting there, any ice you might put in the room. None of those things have to communicate with each other. They just all respond to the same field they're inside.</p>
+      <p>Now go back to Chapter 1. We said that ice and water and steam are the same thing in different states. What changes between those states?</p>
+      <p>Not the water. The field the water is in.</p>
+      <p>Put water in a freezing field: it becomes ice. In a warm field: it stays liquid. In a very hot field: it becomes steam. The water doesn't decide. The field sets the conditions. The conditions determine the state.</p>
+    </div>
+
+    <div class="key-idea">
+      Field → conditions → state → behavior. The chain runs in one direction.
+    </div>
+
+    <div class="student-text">
+      <p>This is the chain. The field comes first. The conditions it creates come next. The state follows from the conditions. And the behavior — what you can observe and feel — is what the state produces.</p>
+      <p>When you want to understand why something is behaving the way it is, you don't start with the thing. You start with the field it's in.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 2.2 -->
+  <div class="teacher-note" id="note-2-2">
+    <div class="teacher-note-label">Teacher's Notation — Section 2.2</div>
+    <p><strong>Temperature as a field, not a property:</strong> This is a quiet but important move. Standard curriculum attributes temperature to the kinetic energy of individual molecules — it's a property of the particles. We're framing it as a distributed field condition that acts on everything inside it simultaneously. These are not contradictory; the field framing is at a higher level of abstraction. But for Level 1, stay at the field level. The molecular description can come later as a zoom-in.</p>
+    <p><strong>The causal chain — field → conditions → state → behavior:</strong> This is the core architecture of Phase Realism stated plainly. At Level 1, present it as descriptive fact. Students don't need to argue for it; they just need to start organizing their observations through it. The chain becomes more interesting and complex at Level 3 (Thresholds change everything) and Level 4 (Relationship complicates the clean directionality).</p>
+    <p><strong>Returning to Chapter 1:</strong> The callback to ice/water/steam is intentional. Students already have that example in their body. Connecting it to fields here creates the first synthesis moment in the curriculum. The example gains a causal layer — it doesn't just describe states, it explains why states change. This is a significant conceptual step; give it room. Ask students: what was the field? What did it do? What state followed?</p>
+    <p><strong>Common mistake:</strong> Students may say "the field changed the molecules." Gentle redirect: at this level, we're staying at the field level. <em>The field changed. The state changed. We can describe that accurately without going inside.</em> The molecules are a separate question, for a different level.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 2.3 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 2.3</div>
+    <h2 class="section-title">You Already Navigate Fields</h2>
+    <div class="student-text">
+      <p>Here's something you do every day without thinking about it.</p>
+      <p>You walk into a different kind of room — a library, a party, an empty church, a crowded waiting room. Before you say anything to anyone, something about how you're moving changes. You walk differently. Your voice finds a different level. You feel more alert, or more relaxed, or more careful.</p>
+      <p>What are you responding to?</p>
+      <p>Not the individual people. Not the specific furniture. Something distributed through the whole space — a condition that extends through the room and affects everything inside it — is changing how you behave.</p>
+      <p>In Chapter 1, we said that rooms have states. Now we can say something more precise: rooms have field conditions. The field determines the state. The state is what you walk into when you enter the room.</p>
+      <p>When you sense the mood of a room before anyone speaks, you are reading the field. When you adjust without being told to — lower your voice, slow your step, sit up straighter — you are responding to a field.</p>
+      <p>Gravity is a physical field. Temperature is a physical field. The charged quiet of a room right before something important happens is a field too. Not the same in their physics — but the same kind of thing: a condition distributed through space that affects everything inside it.</p>
+    </div>
+
+    <div class="key-idea">
+      You don't just live inside fields. You read them. You've been doing it your whole life.
+    </div>
+  </div>
+
+  <!-- Teacher Note 2.3 -->
+  <div class="teacher-note" id="note-2-3">
+    <div class="teacher-note-label">Teacher's Notation — Section 2.3</div>
+    <p><strong>The validation moment:</strong> This section is doing the same work as Section 1.2 in Chapter 1, but now with a causal framework. In Chapter 1, we said that sensing a room's state was real and valid. Now we can say <em>why</em>: the student was reading the field. The perception had an object. This is philosophically and psychologically significant for field-sensitive students who have been told their perceptions are "just feelings."</p>
+    <p><strong>Not metaphor — claim:</strong> The phrase "a condition distributed through space that affects everything inside it" is being applied to both gravity and the mood of a room. This is a real claim, not a loose analogy. The curriculum is not saying these fields are identical. It is saying they are the same <em>kind</em> of thing. This distinction matters and may come up from sharp students or skeptical ones. The correct response: yes, the physics are different. But the structural description — a distributed condition that affects everything inside it — holds at both levels. That's the point.</p>
+    <p><strong>Connection to Unit 6 (Sensing):</strong> This section plants the seed for the final unit of Level 1. Unit 6 will be explicitly about the perception of fields — what it means to be field-sensitive, how to calibrate perception, why some people read certain fields more accurately than others. Everything in Section 2.3 is groundwork for that unit.</p>
+    <p><strong>For students who say "but that's just emotions":</strong> That framing doesn't have to be argued with. The question to ask back is: <em>what are emotions, if not accurate readings of field conditions that matter to you?</em> Leave it open. It's a better question than an answer.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Vocabulary -->
+  <div class="vocab-box">
+    <div class="vocab-label">Key Words — Chapter 2</div>
+    <ul class="vocab-list">
+      <li><span class="vocab-term">Field —</span><span class="vocab-def">a condition that extends through space and affects everything inside it, without direct contact</span></li>
+      <li><span class="vocab-term">Gradient —</span><span class="vocab-def">the variation in a field across space — stronger here, weaker there, with a direction of change between them</span></li>
+      <li><span class="vocab-term">Distributed —</span><span class="vocab-def">spread through a whole space, not located in one spot; temperature in a room is distributed, not in one corner</span></li>
+      <li><span class="vocab-term">Field-sensitive —</span><span class="vocab-def">having a developed ability to detect and respond accurately to field conditions; everyone does this to some degree</span></li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Vocab -->
+  <div class="teacher-note" id="note-2-vocab">
+    <div class="teacher-note-label">Teacher's Notation — Key Words</div>
+    <p><strong>"Gradient"</strong> is introduced gently here — it doesn't need to be pressed at Level 1. Plant it. A gradient is why you feel different near a window in winter than near the center of a warm room. It's why certain places in a field feel stronger than others. The mathematical treatment of gradients comes at Level 3 or Level 4. For now: fields vary across space, and that variation has a direction.</p>
+    <p><strong>"Field-sensitive"</strong> is a term the curriculum is coining deliberately. It names something real — variation in perceptual sensitivity to field conditions — without pathologizing or mystifying it. It belongs in the vocabulary because students who have it should be able to name it, and students who haven't noticed it in themselves may discover they have it once they have the word.</p>
+  </div>
+
+  <!-- Try This -->
+  <div class="try-box">
+    <div class="try-label">Try This</div>
+    <ul class="try-list">
+      <li>Stand still in a room. Without moving, what field conditions can you detect right now? Temperature, air movement, sound, light — these are all fields. Name as many as you can.</li>
+      <li>Think of a place where you noticed an "atmosphere" strongly before you understood it — a room, a location, a crowd. Now describe it as a field: what was the condition that was distributed through that space? What did it make you do?</li>
+      <li>Gravity is a field. Imagine you could turn it down to half strength. What would change about how you move, how things fall, how a building has to be built? What wouldn't change?</li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Try This -->
+  <div class="teacher-note" id="note-2-try">
+    <div class="teacher-note-label">Teacher's Notation — Try This</div>
+    <p><strong>Exercise 1</strong> (name the fields around you) is a field-inventory exercise. It builds the habit of noticing what's always there. Temperature, air pressure, sound field, light, gravitational pull — these are all present simultaneously. Ask students: how many fields are you inside right now? The answer is: always more than you can count.</p>
+    <p><strong>Exercise 2</strong> (atmosphere as field) is the applied version of Section 2.3. Have students describe a field without using the word "feeling" — describe it structurally instead: what was the condition, where did it extend, what did it make you and others do? This is a subtle shift from "I felt X" to "the field condition was X and it produced Y." That shift is the epistemological goal of the chapter.</p>
+    <p><strong>Exercise 3</strong> (half-gravity thought experiment) is just fun — but it also teaches the relationship between field strength and behavior. The field isn't on or off; it has magnitude. Changing the magnitude changes everything downstream. This is the seed of gradient thinking and also of ΔHV (threshold steepness) which doesn't appear by name until much later. Plant it as play.</p>
+  </div>
+
+  <!-- Chapter Nav -->
+  <div class="chapter-nav">
+    <span class="nav-prev">← Chapter 1: States</span>
+    <span class="nav-position">Chapter 2 · Unit 2 of 6</span>
+    <span class="nav-next">Chapter 3: Thresholds →</span>
+  </div>
+
+</div>
+
+<script>
+  const noteIds = [
+    'note-2-1', 'note-2-2', 'note-2-3', 'note-2-vocab', 'note-2-try'
+  ];
+  const btn = document.getElementById('toggleBtn');
+  let visible = true;
+
+  function setNotes(show) {
+    visible = show;
+    noteIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = !show;
+    });
+    btn.textContent = show ? 'Hide Teacher Notes' : 'Show Teacher Notes';
+    btn.classList.toggle('dimmed', show);
+    try { localStorage.setItem('pr_teacher', show ? '1' : '0'); } catch(e) {}
+  }
+
+  btn.addEventListener('click', () => setNotes(!visible));
+  try {
+    const saved = localStorage.getItem('pr_teacher');
+    if (saved === '0') setNotes(false);
+  } catch(e) {}
+</script>
+
+</body></html>

@@ -1,0 +1,599 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phase Realism — Chapter 6: Sensing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@400;600&display=swap">
+
+<style>
+  :root {
+    --bg:              #faf8f4;
+    --bg-alt:          #f2ede6;
+    --fg:              #1c2830;
+    --fg-muted:        #4a5660;
+    --fg-subtle:       #7e8c97;
+    --accent:          #2c5a8a;
+    --accent-lt:       #e8f0f9;
+    --teacher-bg:      #fffbf0;
+    --teacher-border:  #c8992a;
+    --teacher-label:   #8a6610;
+    --divider:         #ddd8cf;
+    --vocab-bg:        #f0ece6;
+    --try-bg:          #e8eff8;
+    --try-border:      #2c5a8a;
+    --key-bg:          #edf3fb;
+    --key-border:      #2c5a8a;
+    --catalog-bg:      #f5f2ee;
+    --catalog-border:  #c0b8ac;
+    --font-display:    'Lora', Georgia, serif;
+    --font-body:       'Lora', Georgia, serif;
+    --font-ui:         'Source Sans 3', system-ui, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:             #161e25;
+      --bg-alt:         #1c2530;
+      --fg:             #e0d9cf;
+      --fg-muted:       #9aabba;
+      --fg-subtle:      #607080;
+      --accent:         #5b9bd5;
+      --accent-lt:      #1a2e42;
+      --teacher-bg:     #1e1a0f;
+      --teacher-border: #c8992a;
+      --teacher-label:  #d4a83a;
+      --divider:        #2e3840;
+      --vocab-bg:       #1a1e22;
+      --try-bg:         #142030;
+      --try-border:     #5b9bd5;
+      --key-bg:         #142030;
+      --key-border:     #5b9bd5;
+      --catalog-bg:     #1a1e22;
+      --catalog-border: #3a4450;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:             #161e25;
+    --bg-alt:         #1c2530;
+    --fg:             #e0d9cf;
+    --fg-muted:       #9aabba;
+    --fg-subtle:      #607080;
+    --accent:         #5b9bd5;
+    --accent-lt:      #1a2e42;
+    --teacher-bg:     #1e1a0f;
+    --teacher-border: #c8992a;
+    --teacher-label:  #d4a83a;
+    --divider:        #2e3840;
+    --vocab-bg:       #1a1e22;
+    --try-bg:         #142030;
+    --try-border:     #5b9bd5;
+    --key-bg:         #142030;
+    --key-border:     #5b9bd5;
+    --catalog-bg:     #1a1e22;
+    --catalog-border: #3a4450;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    padding-left:  max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0;
+  }
+
+  .toolbar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--divider);
+    padding: 0.55rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    color: var(--fg-muted);
+  }
+  .toolbar-series { font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--fg-subtle); }
+  #toggleBtn {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.3rem 0.85rem;
+    border: 1.5px solid var(--accent);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  #toggleBtn:hover { background: var(--accent-lt); }
+  #toggleBtn.dimmed { border-color: var(--divider); color: var(--fg-subtle); }
+  #toggleBtn.dimmed:hover { background: var(--bg-alt); }
+
+  .content { max-width: 680px; margin: 0 auto; padding-block: 3rem 5rem; }
+
+  .preface {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-lt);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.97rem;
+    color: var(--fg-muted);
+  }
+  .preface p { margin: 0.5rem 0; }
+  .preface p:first-of-type { margin-top: 0; }
+  .preface p:last-child { margin-bottom: 0; }
+  .preface-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .chapter-header { margin-bottom: 2.5rem; }
+  .chapter-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.5rem;
+  }
+  .chapter-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+  .chapter-rule { border: none; border-top: 2px solid var(--divider); margin: 0; }
+
+  .section { margin-bottom: 1rem; }
+  .section-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.3rem;
+    margin-top: 2rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+  .student-text p { margin: 0 0 1.1rem; }
+  .student-text p:last-child { margin-bottom: 0; }
+  .student-text em { font-style: italic; }
+
+  /* Catalog block — Level 1 review card */
+  .catalog {
+    background: var(--catalog-bg);
+    border: 1.5px solid var(--catalog-border);
+    border-radius: 8px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+  .catalog-head {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 1rem;
+  }
+  .catalog-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.8rem; }
+  .catalog-item { display: flex; gap: 0.9rem; align-items: flex-start; }
+  .catalog-num {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-lt);
+    border-radius: 4px;
+    padding: 0.15rem 0.45rem;
+    white-space: nowrap;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+  .catalog-item-text { color: var(--fg-muted); line-height: 1.6; }
+  .catalog-item-text strong { color: var(--fg); font-weight: 600; }
+
+  /* Principle block */
+  .principle-list { list-style: none; padding: 0; margin: 1.2rem 0; display: flex; flex-direction: column; gap: 1.25rem; counter-reset: principle-counter; }
+  .principle-item { display: flex; gap: 1rem; align-items: flex-start; counter-increment: principle-counter; }
+  .principle-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--accent);
+    line-height: 1;
+    min-width: 1.5rem;
+    text-align: center;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+  .principle-body { color: var(--fg-muted); line-height: 1.7; }
+  .principle-body strong { color: var(--fg); font-weight: 600; }
+
+  .key-idea {
+    border-left: 3px solid var(--key-border);
+    background: var(--key-bg);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.25rem;
+    margin: 1.4rem 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  /* Level 1 closing panel */
+  .level-close {
+    border: 2px solid var(--divider);
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem;
+    margin: 2rem 0;
+    background: var(--bg-alt);
+  }
+  .level-close-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.85rem;
+  }
+  .level-close p { margin: 0 0 0.8rem; color: var(--fg-muted); }
+  .level-close p:last-child { margin-bottom: 0; }
+  .level-close-title {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--fg);
+  }
+
+  .teacher-note {
+    background: var(--teacher-bg);
+    border: 1.5px solid var(--teacher-border);
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0 2rem;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--fg-muted);
+  }
+  .teacher-note-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teacher-label);
+    margin-bottom: 0.75rem;
+  }
+  .teacher-note p { margin: 0 0 0.75rem; }
+  .teacher-note p:last-child { margin-bottom: 0; }
+  .teacher-note strong { font-weight: 600; color: var(--fg); }
+
+  .section-divider { border: none; border-top: 1px solid var(--divider); margin: 2rem 0; }
+
+  .vocab-box { background: var(--vocab-bg); border-radius: 8px; padding: 1.25rem 1.5rem; margin: 2rem 0 1rem; }
+  .vocab-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.9rem;
+  }
+  .vocab-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.65rem; }
+  .vocab-term { font-weight: 600; margin-right: 0.3rem; color: var(--fg); }
+  .vocab-def { color: var(--fg-muted); }
+
+  .try-box {
+    background: var(--try-bg);
+    border-left: 3px solid var(--try-border);
+    border-radius: 0 8px 8px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0 1rem;
+  }
+  .try-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+  .try-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 0.9rem;
+    counter-reset: try-counter;
+  }
+  .try-list li {
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    color: var(--fg-muted); counter-increment: try-counter;
+  }
+  .try-list li::before {
+    content: counter(try-counter);
+    font-family: var(--font-ui); font-size: 0.78rem; font-weight: 600;
+    color: var(--accent); background: var(--accent-lt);
+    border-radius: 50%; min-width: 1.4rem; height: 1.4rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 0.15rem; flex-shrink: 0;
+  }
+
+  .chapter-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; margin-top: 3rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--divider);
+    font-family: var(--font-ui); font-size: 0.82rem;
+  }
+  .nav-position { color: var(--fg-subtle); text-align: center; white-space: nowrap; }
+  .nav-next { color: var(--accent); font-weight: 600; white-space: nowrap; }
+</style>
+
+<div class="toolbar">
+  <span class="toolbar-series">Phase Realism · Elementary</span>
+  <span style="color: var(--fg-muted); font-size: 0.78rem;">Chapter 6: Sensing</span>
+  <button id="toggleBtn">Hide Teacher Notes</button>
+</div>
+
+<div class="content">
+
+  <!-- Bridge -->
+  <div class="preface">
+    <div class="preface-eyebrow">Arriving at Chapter 6</div>
+    <p>Five chapters. Five concepts: states, fields, thresholds, relationships, coherence.</p>
+    <p>Each chapter used the same quiet move: it said you already knew how to sense this. It just gave you a name for it. Now it's time to look directly at the sensing itself — what it is, why it's real, and how to trust it more than you currently do.</p>
+    <p>This chapter is where Level 1 lands.</p>
+  </div>
+
+  <!-- Chapter Header -->
+  <div class="chapter-header">
+    <div class="chapter-eyebrow">Chapter 6 · Unit 6: Sensing</div>
+    <h1 class="chapter-title">How to Read What Is Actually There</h1>
+    <hr class="chapter-rule">
+  </div>
+
+  <!-- ─── Section 6.1 ──────────────────────────────────────── -->
+  <div class="section" style="margin-top: 2rem;">
+    <div class="section-eyebrow">Section 6.1</div>
+    <h2 class="section-title">You Are an Instrument</h2>
+    <div class="student-text">
+      <p>In physics, an instrument is a physical system that changes its own state in response to something in its environment — and does so in a way we can read. A thermometer changes its liquid level in response to temperature. A seismograph changes its paper trace in response to ground movement. A magnetometer changes its needle position in response to magnetic field strength. The instrument is just a system that's sensitive to something, and that sensitivity is what lets it detect.</p>
+      <p>You are also a physical system. Your skin changes its state in response to temperature — faster than a thermometer, if less precisely. Your nervous system changes its state in response to social atmosphere, threat, safety, proximity, and many other things, before you have consciously named any of them. Your stomach has been detecting situations your brain hadn't processed yet. Your body has been ahead of your analysis your whole life.</p>
+      <p>What makes a scientific instrument trustworthy is not that it is made of metal instead of flesh. It is that its responses are <em>reproducible</em> — the same input gives the same output — and <em>calibrated</em> — we know what error range to expect and under what conditions it drifts. A thermometer can drift. An uncalibrated thermometer reads wrong without knowing it.</p>
+      <p>Your sensing can also drift. This is not an argument against sensing — it is the same truth that applies to every instrument. The response to drift is not to stop trusting the instrument. It's to understand where and how it drifts, and account for that.</p>
+    </div>
+
+    <div class="key-idea">
+      The question is not whether you sense the world. You do — constantly, whether or not you attend to it. The question is what you're actually detecting, and how well you've learned to read your own responses.
+    </div>
+
+    <div class="student-text">
+      <p>There is a version of this that gets it backwards. That version says: physical instruments are real detectors; your feelings are just feelings. But this draws the line in the wrong place. The right line is between calibrated sensing and uncalibrated sensing — between responses that have been examined and responses that haven't. The instrument on that ruler of trustworthiness is not what it's made of. It's how well its error is understood.</p>
+      <p>What you've been doing in Level 1 is the beginning of calibration. You've been learning to name what you detect, which is the first step toward being able to examine it.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 6.1 -->
+  <div class="teacher-note" id="note-6-1">
+    <div class="teacher-note-label">Teacher's Notation — Section 6.1</div>
+    <p><strong>"You are an instrument":</strong> This framing will get two kinds of pushback. The first: that calling a person an "instrument" is reductive. The response is that this framing is actually the opposite of reductive — it includes human sensing in the general category of physical detection, which is the more expansive claim. A more sensitive detector is not less than a crude one. Calling the nervous system an instrument is recognizing it as one of the most sophisticated detection systems we know of. The second pushback: that it seems to grant too much legitimacy to "feelings" as data. The response is that the distinction being drawn is calibrated vs. uncalibrated — not feeling vs. not-feeling. Every instrument drifts; every sensor has error; the work is to understand the error, not to deny the sensing.</p>
+    <p><strong>What "calibration" means here:</strong> At Level 1, calibration means giving the sensing a name, which allows you to begin examining it. Can I reproduce this detection? Does this pattern hold across contexts, or is it specific to one situation? When my sensing was wrong, what was different? These are the calibration questions. Students don't need to do formal calibration yet; they need to understand that calibration is what takes sensing from raw capacity to reliable tool.</p>
+    <p><strong>Gut feelings and preconscious processing:</strong> The paragraph about the stomach is scientifically accurate: the enteric nervous system processes environmental signals and produces responses before cortical processing completes. This is not mysticism — it is neuroscience. Students (and teachers) who have been told to "ignore gut feelings because they're not rational" should hear clearly that this instruction is factually wrong. The gut's responses are data; the question is what they're responding to, and whether that's what you think they're responding to. That's calibration.</p>
+    <p><strong>The instrument drift point is important:</strong> Making this explicit — yes, sensing can drift; yes, you can misread — is what distinguishes a scientific treatment of sensing from a mystical one. A mystical treatment says sensing is always right and can't be questioned. A scientific treatment says sensing is real, and like all instruments it has error, bias, and drift that can be studied. This framework is firmly in the scientific treatment. If a student asks "does this mean my feelings are always right?" the answer is no — which is actually the empowering answer, because it means the sensing is real enough to be wrong and therefore real enough to be improved.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 6.2 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 6.2</div>
+    <h2 class="section-title">What You Now Have Names For</h2>
+    <div class="student-text">
+      <p>The five chapters before this one were not five separate science topics. They were five kinds of things your sensing capacity detects — and each chapter gave you a more precise name for one of them.</p>
+    </div>
+
+    <div class="catalog">
+      <div class="catalog-head">Level 1 — What You've Learned to Name</div>
+      <ul class="catalog-list">
+        <li class="catalog-item">
+          <span class="catalog-num">Ch 1</span>
+          <span class="catalog-item-text"><strong>States</strong> — You observe states by watching what a system does: how it responds, what it resists, what it flows through. You've been doing this for every system you've ever interacted with. Now you know that what you're observing is behavioral, relational, and real.</span>
+        </li>
+        <li class="catalog-item">
+          <span class="catalog-num">Ch 2</span>
+          <span class="catalog-item-text"><strong>Fields</strong> — You can detect distributed influences that have no visible source but are definitely present. A room that feels heavy. A temperature drop before anyone turned on the air conditioning. A social atmosphere before anyone said what was wrong. Those detections were real. Now you have a word for what was there.</span>
+        </li>
+        <li class="catalog-item">
+          <span class="catalog-num">Ch 3</span>
+          <span class="catalog-item-text"><strong>Thresholds</strong> — You can sense subcritical states: when something is close to a threshold but hasn't crossed it yet. A conversation about to turn. A mood about to shift. A situation gathering toward a decision point. This sensing is one of the most precise and practically useful things a human can do, and it was never "just a feeling."</span>
+        </li>
+        <li class="catalog-item">
+          <span class="catalog-num">Ch 4</span>
+          <span class="catalog-item-text"><strong>Relationships</strong> — You can read relational configurations: what the relationships in a system are doing, whether they're mutually reinforcing or working against each other, what they're producing. You do this every time you walk into a room of people and read who's with whom.</span>
+        </li>
+        <li class="catalog-item">
+          <span class="catalog-num">Ch 5</span>
+          <span class="catalog-item-text"><strong>Coherence</strong> — You can sense when relationships are aligned versus scattered. When a conversation clicks. When a team is pulling together or pulling apart. When your own attention is gathered or dispersed. The quality difference you notice in all of those cases has a precise structural name.</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="student-text">
+      <p>Here is the important thing: the concepts didn't create the sensing. The sensing was always there. What the concepts did was give you language for it — and language lets you examine it.</p>
+      <p>Before Chapter 2, you might have walked into a room and noticed something without being able to say what. With "field," you can say: there's a distributed condition in this room, something is organizing the space, I'm detecting it at a level below explicit information. That's a different quality of attention than "something felt off." Not because the sensing changed, but because the precision of what you're asking yourself to observe changed.</p>
+      <p>Naming is not decoration. It changes what you can do with what you noticed.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 6.2 -->
+  <div class="teacher-note" id="note-6-2">
+    <div class="teacher-note-label">Teacher's Notation — Section 6.2</div>
+    <p><strong>The catalog as integration exercise:</strong> This section works well as a discussion prompt. Before reading the catalog, ask students: without looking back, what are the five things Level 1 was about? What can you detect using each concept? Then compare what they said to the catalog. The differences between their characterization and the catalog's characterization reveal where the concept hasn't fully landed — and those are the places that benefit from one more pass.</p>
+    <p><strong>Why naming matters:</strong> "Naming is not decoration" is a claim worth spending time on. The argument is: naming is what makes a distinction stable enough to be worked with. Before you have the word "field," you can notice a distributed atmospheric condition in a room, but you can't easily distinguish it from your own mood, can't ask whether it changed when someone left, can't compare it to a field condition in a different room you were in last week. With the word, you can do all of those. The concept is a handle that makes the observation surveyable. This is why precision in language is a scientific skill, not just a literary one.</p>
+    <p><strong>Field detection in social contexts:</strong> The line "a social atmosphere before anyone said what was wrong" is accurate and important. Humans read ambient social states through multiple channels — posture, micro-expression, olfactory cues, sound texture, spatial behavior — faster than explicit verbal processing. This is sometimes called "social cognition" or "reading the room." It is field detection: sensing a distributed relational condition whose source is diffuse but whose effect is real and trackable. Students who do this very well — who are highly sensitive to social atmosphere — are not oversensitive; they are high-resolution detectors. What they need is not to dull the sensitivity, but to calibrate it: to learn to distinguish what they're actually detecting from the interpretations they're layering on top.</p>
+    <p><strong>"Subcritical sensing" as practically most important:</strong> Of the five entries in the catalog, threshold sensing (Chapter 3) has the highest practical value for students in social and emotional contexts. Being able to sense that a situation is near a threshold before the threshold is crossed is what allows you to act rather than just react. Students who have this capacity and haven't named it are often confused about what they're detecting ("I just had a bad feeling") and sometimes dismiss their own sensing for that reason. Naming it as subcritical threshold detection — and validating that this is one of the most refined perceptual skills in the human repertoire — can have real impact on how students relate to their own sensing.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 6.3 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 6.3</div>
+    <h2 class="section-title">Developing the Instrument</h2>
+    <div class="student-text">
+      <p>Sensing is a skill. Like any skill, it develops with practice and attention. And like any instrument, it becomes more reliable when you understand how it works — including where it's likely to make mistakes.</p>
+      <p>Here are three principles for developing sensing as a practice.</p>
+    </div>
+
+    <ul class="principle-list">
+      <li class="principle-item">
+        <span class="principle-num">I</span>
+        <span class="principle-body"><strong>Observe before interpreting.</strong> There's a gap between what you detect and what you decide it means — and keeping that gap open as long as possible is one of the most important things you can do with sensing. When you walk into a room and notice a field quality, try to describe the sensing before you conclude what caused it. What is present? What changed? What's the texture of what you're detecting? Interpretation closes the observation window. The more you can stay in observation, the more you get to work with.</span>
+      </li>
+      <li class="principle-item">
+        <span class="principle-num">II</span>
+        <span class="principle-body"><strong>Notice what's consistent.</strong> A single observation might be signal; it might be noise. When you sense the same thing across several different contexts, or when an observation holds up as you pay more attention rather than dissolving, that's a signal signature. Calibration is built from many observations over time — not from certainty on the first one. Instruments earn their trustworthiness by accumulating a track record.</span>
+      </li>
+      <li class="principle-item">
+        <span class="principle-num">III</span>
+        <span class="principle-body"><strong>Let yourself be wrong.</strong> This is the one most people resist. But an instrument that can't report negative results — that's always right — isn't calibrated. It's just confirming expectations. Being able to say "I sensed a threshold approaching but it didn't tip; I misread something" is evidence that the sensing is real. Mystical sensing is always right. Scientific sensing is sometimes wrong, and that wrongness is where it learns. The goal is not to be right every time. The goal is to get better.</span>
+      </li>
+    </ul>
+
+    <div class="student-text">
+      <p>These three principles are not special to Phase Realism. They are the structure of good observation in any field. What's specific here is that you're applying them to a class of observations that most science curricula don't treat as observations at all — the kind that happen in your body, your attention, and your reading of relational configurations in the world around you.</p>
+      <p>That's what Level 1 was for. Not to give you five facts about physics. To give you five concepts for a practice of reading what's actually present — in fields, at thresholds, in the texture of relationships, in whether a system is coherent or scattered — and to build the argument that this reading is a legitimate and developable scientific capacity.</p>
+    </div>
+
+    <div class="key-idea">
+      The physics and the sensing are the same thing, seen from two angles. Phase Realism describes the relational structure of reality. Sensing is the practice of reading that structure. You were already doing it. Now you have words for what you're doing — and words are how you do it better.
+    </div>
+  </div>
+
+  <!-- Teacher Note 6.3 -->
+  <div class="teacher-note" id="note-6-3">
+    <div class="teacher-note-label">Teacher's Notation — Section 6.3</div>
+    <p><strong>Three principles as scientific method:</strong> Teachers who recognize these three principles as the structure of the scientific method — observation before interpretation (empiricism), replication (signal vs. noise), falsifiability (letting yourself be wrong) — are correct. That's exactly what they are. The curriculum is making the case that scientific method is not only for laboratories. It applies wherever you're trying to detect something accurately. The novelty here is applying it to perceptual sensing rather than instrument readings — and the argument is that this is a completely legitimate application because perceptual sensing is a form of physical detection.</p>
+    <p><strong>Principle I — observation before interpretation:</strong> This is the hardest for most students, because interpretation is fast and unconscious. "The room feels tense" is already an interpretation — "tense" names a relationship, a cause, an implied threat. The observation level is: the air quality in this room is registering differently than in the hallway. The posture arrangement is different. The acoustic texture is different. Something in the relational field is present that wasn't there when I walked in. That's harder to hold, but it's closer to the actual sensing. Exercises that help: ask students to describe a room using only what they can directly observe in the first five seconds, before analysis. Then ask what they added in the next thirty. The difference is usually the interpretation layer.</p>
+    <p><strong>Principle III — letting yourself be wrong:</strong> The most important of the three for developing trust in sensing over time. Many students who have strong sensing have also been told (directly or implicitly) that their sensing is unreliable — either because it's "just feelings" or because they've had experiences of being wrong and concluded that the sensing itself was the problem. The reframe: being wrong about a sensing observation means the sensing is real enough to be wrong. An error is data: what did I detect that I mis-interpreted? What condition was I in that added noise? This is how calibration improves, and this framing converts past misreadings from evidence-against-sensing to productive-data-for-improving-it.</p>
+    <p><strong>The closing paragraph:</strong> "The physics and the sensing are the same thing, seen from two angles" is the curriculum thesis statement. Phase Realism is not a physics theory that you then apply metaphorically to human perception — it is a description of relational structure at every scale, and sensing is the practice of reading that structure at the human scale. If this frame has worked across Level 1, students should feel this as recognition rather than announcement. The test: ask "what is sensing?" and see if students can answer with something more than "noticing things." If they say something about detecting states, fields, thresholds, relational configurations, coherence — the framework has landed.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Level 1 Close -->
+  <div class="level-close">
+    <div class="level-close-label">End of Level 1</div>
+    <div class="level-close-title">What You've Built</div>
+    <p>Six chapters. Six concepts. One framework.</p>
+    <p>You now have precise language for: what states are and how they're observed; what fields are and how they organize space; what thresholds are and what it means to be near one; what it means for a world to be made of relationships rather than things; what coherence is and what it produces; and what sensing is and how to develop it.</p>
+    <p>These aren't six separate facts. They're one way of reading the world — a way that includes your own perceptual experience as a legitimate source of information, and gives you the tools to examine it as carefully as any physical instrument.</p>
+    <p>Level 2 builds on this foundation. But before you go there: the framework you have now is already complete for the scale you encounter every day. You can use it right now, on real things, to read what is actually present.</p>
+    <p style="color: var(--fg); font-weight: 500; margin-top: 1rem; margin-bottom: 0;">That was always the point.</p>
+  </div>
+
+  <!-- Vocabulary -->
+  <div class="vocab-box">
+    <div class="vocab-label">Key Words — Chapter 6</div>
+    <ul class="vocab-list">
+      <li><span class="vocab-term">Sensing —</span><span class="vocab-def">the capacity of a physical system to detect and register changes in its environment; in the context of this curriculum, the practice of deliberately reading states, fields, thresholds, relational configurations, and coherence</span></li>
+      <li><span class="vocab-term">Detection —</span><span class="vocab-def">any process in which a system changes its own state in response to something in its environment in a way that can be read; the general category to which all instruments and all perceptual sensing belong</span></li>
+      <li><span class="vocab-term">Calibration —</span><span class="vocab-def">the process of learning the error range and bias of a sensing system — what it reliably detects, what it drifts on, under what conditions its responses are more or less trustworthy</span></li>
+      <li><span class="vocab-term">Signal —</span><span class="vocab-def">a response from a sensing system that reflects what is actually present; distinguished from noise by consistency and reproducibility across observations</span></li>
+      <li><span class="vocab-term">Noise —</span><span class="vocab-def">responses in a sensing system that don't reflect what is being measured — internal drift, bias, interference from other sources; calibration is learning to distinguish noise from signal</span></li>
+      <li><span class="vocab-term">Interpretation —</span><span class="vocab-def">what you decide a detection means; separate from the sensing itself, and best done after the observation rather than during it</span></li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Vocab -->
+  <div class="teacher-note" id="note-6-vocab">
+    <div class="teacher-note-label">Teacher's Notation — Key Words</div>
+    <p><strong>Signal and noise</strong> in a human sensing context: noise in human sensing has several identifiable sources. Emotional state (high arousal tends to amplify and distort detections); fatigue (lowers baseline sensitivity and increases error); confirmation bias (the tendency to detect what you expect rather than what's present); projection (attributing internal states to external sources). None of these are reasons to distrust sensing entirely — they are the calibration problem, and naming them is what makes calibration possible. Students who ask "how do I know if it's real or just in my head?" can be given this vocabulary: what conditions was I in? Have I detected this before, in different conditions? Did my reading hold up when I attended more carefully, or dissolve? These are the signal-vs-noise questions applied to their own experience.</p>
+    <p><strong>Interpretation as a second step:</strong> The curriculum consistently treats interpretation as downstream of observation, and this distinction matters in practice. Many students (and adults) experience interpretation as simultaneous with observation — they notice something and immediately assign meaning. The practice being built here is to hold the observation longer before the interpretation closes it. This is not a special meditative skill; it is the same thing a scientist does when they write down data before they analyze it, or a doctor does when they finish the full physical examination before they diagnose. The form of the discipline applies directly.</p>
+  </div>
+
+  <!-- Try This -->
+  <div class="try-box">
+    <div class="try-label">Try This</div>
+    <ul class="try-list">
+      <li>Choose one of the five Level 1 concepts. Spend ten minutes trying to notice it in your environment right now. Write down what you observed, being as specific as possible — what exactly did you detect, and what are you less sure about? The act of writing forces precision, which is the beginning of calibration.</li>
+      <li>Think of a time you sensed something before you could explain it — a room that felt off, a conversation about to change direction, a decision point approaching. What were you detecting? Can you name it now in Level 1 terms: state, field, threshold, relational configuration, coherence?</li>
+      <li>Think of a time you were wrong about a sensing — you thought a threshold was approaching but nothing tipped, or a room you expected to feel a certain way didn't. What did being wrong feel like? What does it tell you that you can be wrong? Does that make the sensing less real, or does it make it more real?</li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Try This -->
+  <div class="teacher-note" id="note-6-try">
+    <div class="teacher-note-label">Teacher's Notation — Try This</div>
+    <p><strong>Exercise 1</strong> (written observation) works best with a short silent period followed by writing, then pair sharing. The instruction "write down what you observed" is itself a calibration move — students quickly discover they can't write "the room felt weird" because that's interpretation, not observation. Ask: what specifically did you notice? Was there a sound quality? A pattern of where people are positioned? A temperature difference? The challenge surfaces what observation without interpretation actually requires, which is more effortful than it sounds.</p>
+    <p><strong>Exercise 2</strong> (retroactive naming) is the most powerful of the three for integration. Ask students to share examples and work through the naming together as a group: "You said the room felt off before anything happened — what was that? What might have been distributing that quality through the space? That's a field. What were you sensing before it resolved? That's a subcritical state." Done together, this exercise shows students the concepts snapping onto experiences they already had. The recognition response — "oh, that's what that was" — is the framework landing.</p>
+    <p><strong>Exercise 3</strong> (being wrong) is the most important for long-term development and the one most likely to be skipped. Hold the question "does that make the sensing less real, or more real?" seriously. Students who conclude that being wrong makes the sensing less trustworthy need to hear the counter-argument explicitly: an instrument that is never wrong hasn't been tested; an instrument that is sometimes wrong and understands why is calibrated. Being wrong is how you find out what you're actually detecting versus what you expected to detect. It is evidence that the sensing is real enough to be examined — which means it's real enough to be improved.</p>
+    <p><strong>Closing note for Level 1:</strong> When teaching this chapter, it's worth naming for students what you've just done together. Level 1 is a framework — a way of reading the world. It will take longer than six chapters to fully land in daily practice. But the students who finish Level 1 with these six names available to them, and who are using them to observe rather than to explain, have the foundation for everything Level 2 builds. The goal for Level 1 is not mastery of content. It's a changed relationship to their own sensing — one that treats it as real, developable, and worth attending to.</p>
+  </div>
+
+  <!-- Chapter Nav -->
+  <div class="chapter-nav">
+    <span class="nav-next" style="color: var(--fg-muted); font-weight: 400;">← Chapter 5: Coherence</span>
+    <span class="nav-position">Chapter 6 · Unit 6 of 6</span>
+    <span class="nav-next">Level 2 →</span>
+  </div>
+
+</div>
+
+<script>
+  const noteIds = [
+    'note-6-1', 'note-6-2', 'note-6-3', 'note-6-vocab', 'note-6-try'
+  ];
+  const btn = document.getElementById('toggleBtn');
+  let visible = true;
+
+  function setNotes(show) {
+    visible = show;
+    noteIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = !show;
+    });
+    btn.textContent = show ? 'Hide Teacher Notes' : 'Show Teacher Notes';
+    btn.classList.toggle('dimmed', show);
+    try { localStorage.setItem('pr_teacher', show ? '1' : '0'); } catch(e) {}
+  }
+
+  btn.addEventListener('click', () => setNotes(!visible));
+  try {
+    const saved = localStorage.getItem('pr_teacher');
+    if (saved === '0') setNotes(false);
+  } catch(e) {}
+</script>
+
+</body></html>

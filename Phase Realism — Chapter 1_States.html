@@ -1,0 +1,637 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phase Realism — Elementary</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;600;700&display=swap">
+
+<style>
+/* ─────────────────────────────────────────────────────────────
+   Layout: centered single column, teacher notes as inline callouts
+   Color: ocean-slate accent on warm-white; amber for teacher notes
+   Type: Lora for student text + display; Source Sans 3 for UI/labels
+   ───────────────────────────────────────────────────────────── */
+:root {
+  --bg:              #faf8f4;
+  --bg-alt:          #f2ede6;
+  --fg:              #1c2830;
+  --fg-muted:        #4a5660;
+  --fg-subtle:       #7e8c97;
+  --accent:          #2c5a8a;
+  --accent-lt:       #e8f0f9;
+  --teacher-bg:      #fffbf0;
+  --teacher-border:  #c8992a;
+  --teacher-label:   #8a6610;
+  --divider:         #ddd8cf;
+  --vocab-bg:        #f0ece6;
+  --try-bg:          #e8eff8;
+  --try-border:      #2c5a8a;
+  --key-bg:          #edf3fb;
+  --key-border:      #2c5a8a;
+
+  --font-display:    'Lora', Georgia, serif;
+  --font-body:       'Lora', Georgia, serif;
+  --font-ui:         'Source Sans 3', system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:              #161e25;
+    --bg-alt:          #1c2530;
+    --fg:              #e0d9cf;
+    --fg-muted:        #9eaab5;
+    --fg-subtle:       #607080;
+    --accent:          #5e96cc;
+    --accent-lt:       #1a2c3d;
+    --teacher-bg:      #1e1b0e;
+    --teacher-border:  #c8992a;
+    --teacher-label:   #d4a830;
+    --divider:         #28363e;
+    --vocab-bg:        #1c2530;
+    --try-bg:          #192536;
+    --try-border:      #4a7aae;
+    --key-bg:          #1a2535;
+    --key-border:      #4a7aae;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:              #161e25;
+  --bg-alt:          #1c2530;
+  --fg:              #e0d9cf;
+  --fg-muted:        #9eaab5;
+  --fg-subtle:       #607080;
+  --accent:          #5e96cc;
+  --accent-lt:       #1a2c3d;
+  --teacher-bg:      #1e1b0e;
+  --teacher-border:  #c8992a;
+  --teacher-label:   #d4a830;
+  --divider:         #28363e;
+  --vocab-bg:        #1c2530;
+  --try-bg:          #192536;
+  --try-border:      #4a7aae;
+  --key-bg:          #1a2535;
+  --key-border:      #4a7aae;
+  color-scheme: dark;
+}
+
+/* ── Base ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.78;
+  margin: 0;
+  padding-left:  max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 5rem;
+}
+
+/* ── Safe-area band above sticky header ──────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--bg);
+}
+
+/* ── Toolbar ───────────────────────────────────────────────── */
+.toolbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--divider);
+  padding-block: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.toolbar-title {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+
+.toggle-btn {
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: 4px;
+  padding: 0.28rem 0.85rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.toggle-btn:hover,
+.toggle-btn.dimmed {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ── Content wrapper ───────────────────────────────────────── */
+.content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-top: 3.5rem;
+}
+
+/* ── Preface ───────────────────────────────────────────────── */
+.preface {
+  border-top: 3px solid var(--fg);
+  padding-top: 2rem;
+  margin-bottom: 3.5rem;
+}
+.preface-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+  margin-bottom: 0.9rem;
+}
+.preface p {
+  margin: 0 0 0.95em;
+  font-style: italic;
+  color: var(--fg-muted);
+  font-size: 1rem;
+  line-height: 1.72;
+  min-width: 0;
+}
+.preface p:last-child { margin-bottom: 0; }
+
+/* ── Chapter header ────────────────────────────────────────── */
+.chapter-header { margin-bottom: 2.5rem; }
+.chapter-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.45rem;
+}
+.chapter-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.15;
+  text-wrap: balance;
+  margin: 0 0 1.5rem;
+}
+.chapter-rule {
+  border: none;
+  border-top: 1px solid var(--divider);
+}
+
+/* ── Section ───────────────────────────────────────────────── */
+.section { margin-bottom: 0; }
+.section-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+  margin-bottom: 0.3rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 1.25rem;
+  text-wrap: balance;
+}
+
+/* student text paragraphs */
+.student-text p {
+  margin: 0 0 1.05em;
+  min-width: 0;
+}
+.student-text p:last-child { margin-bottom: 0; }
+.student-text strong { color: var(--fg); font-weight: 700; }
+
+/* question/emphasis paragraph */
+.student-text .q {
+  padding-left: 1.5rem;
+  font-style: italic;
+  color: var(--fg-muted);
+  margin: 1rem 0 1.1em;
+}
+
+/* ── States grid ───────────────────────────────────────────── */
+.states-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin: 1.4rem 0 1.4rem;
+}
+@media (max-width: 480px) {
+  .states-grid { grid-template-columns: 1fr; }
+}
+.state-card {
+  background: var(--bg-alt);
+  border-radius: 5px;
+  padding: 0.85rem 1rem;
+  min-width: 0;
+}
+.state-name {
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+.state-desc {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+
+/* ── Key idea pullquote ─────────────────────────────────────── */
+.key-idea {
+  background: var(--key-bg);
+  border-left: 3px solid var(--key-border);
+  padding: 0.75rem 1.1rem;
+  margin: 1.6rem 0;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  border-radius: 0 5px 5px 0;
+}
+
+/* ── Teacher note ──────────────────────────────────────────── */
+.teacher-note {
+  background: var(--teacher-bg);
+  border-left: 3px solid var(--teacher-border);
+  border-radius: 0 6px 6px 0;
+  padding: 1.05rem 1.25rem;
+  margin: 1.5rem 0 0;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--fg-muted);
+}
+.teacher-note-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teacher-label);
+  margin-bottom: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.teacher-note-label::before {
+  content: "◆";
+  font-size: 0.55rem;
+}
+.teacher-note p {
+  margin: 0 0 0.75em;
+  min-width: 0;
+}
+.teacher-note p:last-child { margin-bottom: 0; }
+.teacher-note strong { color: var(--teacher-label); font-weight: 700; }
+.teacher-note em { font-style: italic; }
+
+/* ── Section divider ───────────────────────────────────────── */
+.section-divider {
+  border: none;
+  border-top: 1px solid var(--divider);
+  margin: 2.75rem 0;
+}
+
+/* ── Vocab box ─────────────────────────────────────────────── */
+.vocab-box {
+  background: var(--vocab-bg);
+  border-radius: 6px;
+  padding: 1.25rem 1.4rem;
+  margin: 2.5rem 0;
+}
+.vocab-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+  margin-bottom: 0.9rem;
+}
+.vocab-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.vocab-list li {
+  font-size: 0.925rem;
+  line-height: 1.55;
+  min-width: 0;
+}
+.vocab-term {
+  font-style: italic;
+  font-weight: 700;
+  margin-right: 0.15em;
+  color: var(--fg);
+}
+.vocab-def { color: var(--fg-muted); }
+
+/* ── Try this box ──────────────────────────────────────────── */
+.try-box {
+  background: var(--try-bg);
+  border-left: 3px solid var(--try-border);
+  border-radius: 0 6px 6px 0;
+  padding: 1.2rem 1.4rem;
+  margin: 2rem 0;
+}
+.try-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.9rem;
+}
+.try-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  counter-reset: try;
+}
+.try-list li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  min-width: 0;
+  counter-increment: try;
+}
+.try-list li::before {
+  content: counter(try);
+  flex-shrink: 0;
+  width: 1.45rem;
+  height: 1.45rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 0.72rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.12rem;
+}
+
+/* ── Chapter nav ───────────────────────────────────────────── */
+.chapter-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--divider);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  flex-wrap: wrap;
+}
+.nav-placeholder { color: var(--fg-subtle); }
+.nav-position { color: var(--fg-subtle); font-size: 0.78rem; }
+.nav-next {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: default;
+}
+</style>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <span class="toolbar-title">Phase Realism · Elementary · Level 1</span>
+  <button class="toggle-btn" id="toggleBtn">Hide Teacher Notes</button>
+</div>
+
+<div class="content">
+
+  <!-- Preface -->
+  <div class="preface">
+    <div class="preface-eyebrow">A Note Before You Begin</div>
+    <p>This book is about the world you're already living in.</p>
+    <p>Not a different world. This one. The one where you wake up in the morning and the light looks different than it does at noon. The one where you can tell when a room feels wrong before anyone says a word. The one where ice and water and steam are the same thing in three different costumes.</p>
+    <p>This book will give those things names. And when you have the right name for something you've always been noticing, something clicks into place. It's not learning something new — it's recognizing something you've always known.</p>
+    <p>Start from the beginning. The beginning is simple, and simple doesn't mean shallow. The ocean is simple if you know what you're looking at.</p>
+  </div>
+
+  <!-- Chapter Header -->
+  <div class="chapter-header">
+    <div class="chapter-eyebrow">Chapter 1 · Unit 1: States</div>
+    <h1 class="chapter-title">Everything Has a State</h1>
+    <hr class="chapter-rule">
+  </div>
+
+  <!-- ─── Section 1.1 ─────────────────────────────────────── -->
+  <div class="section" style="margin-top: 2rem;">
+    <div class="section-eyebrow">Section 1.1</div>
+    <h2 class="section-title">What You Already Know</h2>
+    <div class="student-text">
+      <p>Look at your hand. Right now. Just look at it.</p>
+      <p>It's doing something. It's holding itself together. The skin stays where it is. The warmth stays in. If you press it against something cold, the heat begins to move. If you hold it in the sun for a while, it gets warmer.</p>
+      <p>Your hand is in a state.</p>
+      <p>A state isn't a thing you have. A state is a way a thing is <strong>behaving right now</strong>, under the conditions it's in.</p>
+      <p>Think about water. You've seen it in all three of its forms — probably without ever thinking much about the fact that they're all the same thing:</p>
+    </div>
+
+    <div class="states-grid">
+      <div class="state-card">
+        <div class="state-name">Ice</div>
+        <div class="state-desc">Hard. Rigid. Holds its shape. Cold to the touch.</div>
+      </div>
+      <div class="state-card">
+        <div class="state-name">Water</div>
+        <div class="state-desc">Fluid. Takes the shape of whatever holds it. Pours, moves.</div>
+      </div>
+      <div class="state-card">
+        <div class="state-name">Steam</div>
+        <div class="state-desc">Rises. Spreads. Invisible. Fills the space around it.</div>
+      </div>
+    </div>
+
+    <div class="student-text">
+      <p>Same stuff. Three completely different behaviors. Three different states.</p>
+      <p>The stuff didn't change. What changed is how it's organized — and how it's organized changes everything about what it does.</p>
+    </div>
+
+    <div class="key-idea">
+      The state isn't what a thing is made of. The state is how it's behaving right now.
+    </div>
+  </div>
+
+  <!-- Teacher Note 1.1 -->
+  <div class="teacher-note" id="note-1">
+    <div class="teacher-note-label">Teacher's Notation — Section 1.1</div>
+    <p><strong>Why we start here:</strong> The standard curriculum opens with "states of matter" but immediately grounds it in particle theory — molecules, atoms, kinetic energy. That framing isn't wrong, but it creates a habit of mind we want to avoid: looking <em>through</em> things to find what they're "really made of."</p>
+    <p>This chapter establishes a different habit: looking at how things are <em>behaving</em>. State is a behavioral observation, not a structural one. A student who can describe the state of a room, a crowd, and a body of water without reaching for particle theory already has the core tool this curriculum needs.</p>
+    <p><strong>"The state isn't what it's made of"</strong> is doing ontological work quietly. It establishes that behavior — and the conditions that organize behavior — are primary. Don't explain this to students directly. Let them feel its correctness through the examples. The formal correction of classical mechanics (where structure produces behavior) comes much later, at Level 3.</p>
+    <p><strong>Pitfall to watch:</strong> Students often ask "but what makes it change?" early. The answer at this level is: conditions. Don't let this become a particle question. "Something in the water responds to temperature, and when enough of it shifts, everything shifts together" is a sufficient Level 1 answer. We're building an intuition for threshold behavior here that pays off in Unit 3.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 1.2 ─────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 1.2</div>
+    <h2 class="section-title">States Are Everywhere</h2>
+    <div class="student-text">
+      <p>Most people, when they hear "states," think about science class. Solid, liquid, gas. That's it.</p>
+      <p>But states are everywhere — and not just in physical matter.</p>
+      <p>A <strong>room</strong> has a state. You've walked into a room where people had just been arguing. Before anyone said a word, you felt it. Something was different about the air, the way people were sitting, the quality of the silence. That's a state. The room was organized differently than it is when nothing has happened.</p>
+      <p>A <strong>crowd</strong> has a state. Have you ever been somewhere when a team scores a goal that changes everything? One moment the crowd is watching. The next, something flips, and suddenly thousands of people are doing the same thing at the same time. That flip — that's a change of state.</p>
+      <p>A <strong>conversation</strong> has a state. There's a difference between a conversation that's going somewhere and one that's going nowhere. You can feel it. The same words in one state are alive; in another they fall flat.</p>
+      <p>Your <strong>body</strong> has states. After a long run, you're in a different state than you were before it — not just more tired. Different in quality. Different in what feels possible from inside it.</p>
+    </div>
+
+    <div class="key-idea">
+      States have qualities you can feel before you can name them.
+    </div>
+
+    <div class="student-text">
+      <p>This is one of the most important things in this book. The state is real before the label is.</p>
+      <p>You knew that room was off before you had words for it. You knew the conversation had shifted before you could say why. You knew the ice was cold before anyone explained what "cold" meant.</p>
+      <p>You already read states. What this book gives you is vocabulary for what you've always been observing.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 1.2 -->
+  <div class="teacher-note" id="note-2">
+    <div class="teacher-note-label">Teacher's Notation — Section 1.2</div>
+    <p><strong>Extending states beyond matter:</strong> This is deliberate and philosophically important. Standard curricula restrict "states of matter" to physical substances. The moment we extend state to rooms, crowds, conversations, and bodies, we're making a core claim: <em>states are real at every scale of organization.</em></p>
+    <p>This is the non-reductionist premise of Phase Realism. A crowd's state is not explained by summing its individual members. A room's state is not explained by the air molecules in it. Each level of organization has its own state-dynamics. This will be made explicit at Level 3, but plant the seed here without naming the principle.</p>
+    <p><strong>Let students sit with the examples.</strong> Ask directly: have you ever walked into a room and known something had happened before anyone spoke? What did you notice? Validate these as real observations. Many field-sensitive students have strong experience here that they've been implicitly trained to distrust as "not scientific." This section rehabilitates that perception as valid observational data — because it is.</p>
+    <p><strong>What this corrects:</strong> The implicit assumption that only physically measurable states count as real. This is one of the foundational corrections the curriculum makes — not argued here, but embedded in the examples. Don't make the argument. Make the examples feel true.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 1.3 ─────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 1.3</div>
+    <h2 class="section-title">The Same Thing, Different States</h2>
+    <div class="student-text">
+      <p>Here's what makes states strange and interesting.</p>
+      <p>The same thing can be in completely different states — and in each state, it behaves as though it's a different thing entirely.</p>
+      <p>Water freezes into ice. Same molecules. Different state. Now it can hold a person's weight. Now it's opaque instead of clear. Now if you leave it alone in a warm room, it comes back to water on its own. The transformation is real — but so is the sameness underneath it.</p>
+      <p>When you understand that the same thing can be in different states, you start to see the world differently. You stop asking <em>"what is this thing?"</em> and you start asking:</p>
+      <p class="q">What state is this thing in?<br>What state was it in before?<br>What would it take for it to change?</p>
+      <p>These are more interesting questions. They're also more honest ones — because things are always changing, always in some state or another, always in relationship with what's around them.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 1.3 -->
+  <div class="teacher-note" id="note-3">
+    <div class="teacher-note-label">Teacher's Notation — Section 1.3</div>
+    <p><strong>"The same thing, different states"</strong> is building toward the concept of identity-under-transformation, which becomes crucial in Unit 4 (Relationship). The implicit question — what stays the same when everything changes? — is one of the deep questions of Phase Realism. Don't press students on it here. Plant the seed and let it sit.</p>
+    <p><strong>The three questions</strong> at the end of the section are the student's new observational tools. They replace "what is this made of?" as the primary question. Encourage students to start applying them outside class — to rooms, conversations, their own bodies. This is the beginning of a new perceptual habit.</p>
+    <p><strong>The long arc — from state to particle:</strong> A student who has absorbed this chapter will eventually understand, at Level 3, that a "particle" is not what standard physics claims it is. A particle is a stable phase configuration — a persistent state in a field. That understanding is only accessible after two full levels of working with state, field, threshold, and relationship. This chapter is the foundation of that entire arc.</p>
+    <p><strong>Discussion question to plant (don't force an answer):</strong> What's the difference between a thing <em>changing</em> and a thing being in a <em>new state</em>? The correct answer — there isn't one; change <em>is</em> state transition — is usually only reachable after Unit 3. Ask it, hear what comes up, and leave it open.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Vocabulary -->
+  <div class="vocab-box">
+    <div class="vocab-label">Key Words — Chapter 1</div>
+    <ul class="vocab-list">
+      <li><span class="vocab-term">State —</span><span class="vocab-def">the way something is behaving right now, under the conditions it's in</span></li>
+      <li><span class="vocab-term">Quality —</span><span class="vocab-def">what you can observe or feel about a state: its texture, temperature, feel, behavior</span></li>
+      <li><span class="vocab-term">Conditions —</span><span class="vocab-def">the circumstances that determine which state something is in</span></li>
+      <li><span class="vocab-term">Observe —</span><span class="vocab-def">to notice directly, through any of your senses — including your sense of a room's mood, a crowd's shift, a conversation's quality</span></li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Vocabulary -->
+  <div class="teacher-note" id="note-vocab">
+    <div class="teacher-note-label">Teacher's Notation — Key Words</div>
+    <p><strong>The vocabulary is intentionally minimal.</strong> Four words. No "molecule," no "atom," no "energy" in the classical sense. This is deliberate. The standard curriculum loads vocabulary early and anchors it to particle-first ontology. We don't. These four words are enough to do the work of Chapter 1.</p>
+    <p><strong>On "observe":</strong> The expanded definition (including the sense of a room's mood, a crowd's shift) is not decoration. It is one of the curriculum's core moves. Perception of social and emotional states is being named as a valid form of scientific observation. This is philosophically significant. Don't slip past it.</p>
+  </div>
+
+  <!-- Try This -->
+  <div class="try-box">
+    <div class="try-label">Try This</div>
+    <ul class="try-list">
+      <li>Find three things in the room around you and name the state each one is in. Don't describe what they're made of — describe how they're <em>behaving</em>.</li>
+      <li>Think of the last time you walked into a place and felt something before anyone spoke. What state was it in? What qualities did you detect?</li>
+      <li>Pick one thing and imagine it in two different states. What changes between them? What stays the same?</li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Try This -->
+  <div class="teacher-note" id="note-try">
+    <div class="teacher-note-label">Teacher's Notation — Try This</div>
+    <p><strong>Exercise 1</strong> (name the state, not the material) is the most important. Students trained in standard science will naturally reach for composition: "it's made of wood, it's a solid." Gently redirect: <em>how is it behaving right now?</em> What would you notice if you watched it for a minute? What does it do when you interact with it?</p>
+    <p><strong>Exercise 2</strong> (the room you walked into) often produces the most vivid responses. Give it room to breathe. Some students have strong, specific memories here. The goal is to treat this perception as scientific observation — not "just a feeling" but an accurate read of a real state. If a student says "I don't notice those things," that's useful data too. What do they notice instead?</p>
+    <p><strong>Exercise 3</strong> (same thing, two states) previews Unit 3 (Thresholds). Don't introduce that word yet. Let students notice the gap between states — the discontinuity. They'll feel it before they name it, which is exactly how the curriculum is designed to work.</p>
+  </div>
+
+  <!-- Chapter Nav -->
+  <div class="chapter-nav">
+    <span class="nav-placeholder">← Previous</span>
+    <span class="nav-position">Chapter 1 · Unit 1 of 6</span>
+    <span class="nav-next">Chapter 2: Fields →</span>
+  </div>
+
+</div>
+
+<script>
+  const noteIds = ['note-1', 'note-2', 'note-3', 'note-vocab', 'note-try'];
+  const btn = document.getElementById('toggleBtn');
+  let visible = true;
+
+  function setNotes(show) {
+    visible = show;
+    noteIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = !show;
+    });
+    btn.textContent = show ? 'Hide Teacher Notes' : 'Show Teacher Notes';
+    btn.classList.toggle('dimmed', show);
+    try { localStorage.setItem('pr_teacher', show ? '1' : '0'); } catch(e) {}
+  }
+
+  btn.addEventListener('click', () => setNotes(!visible));
+
+  // Restore preference
+  try {
+    const saved = localStorage.getItem('pr_teacher');
+    if (saved === '0') setNotes(false);
+  } catch(e) {}
+</script>
+
+</body></html>

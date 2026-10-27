@@ -1,0 +1,527 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phase Realism — Chapter 4: Relationship</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@400;600&display=swap">
+
+<style>
+  :root {
+    --bg:              #faf8f4;
+    --bg-alt:          #f2ede6;
+    --fg:              #1c2830;
+    --fg-muted:        #4a5660;
+    --fg-subtle:       #7e8c97;
+    --accent:          #2c5a8a;
+    --accent-lt:       #e8f0f9;
+    --teacher-bg:      #fffbf0;
+    --teacher-border:  #c8992a;
+    --teacher-label:   #8a6610;
+    --divider:         #ddd8cf;
+    --vocab-bg:        #f0ece6;
+    --try-bg:          #e8eff8;
+    --try-border:      #2c5a8a;
+    --key-bg:          #edf3fb;
+    --key-border:      #2c5a8a;
+    --font-display:    'Lora', Georgia, serif;
+    --font-body:       'Lora', Georgia, serif;
+    --font-ui:         'Source Sans 3', system-ui, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:             #161e25;
+      --bg-alt:         #1c2530;
+      --fg:             #e0d9cf;
+      --fg-muted:       #9aabba;
+      --fg-subtle:      #607080;
+      --accent:         #5b9bd5;
+      --accent-lt:      #1a2e42;
+      --teacher-bg:     #1e1a0f;
+      --teacher-border: #c8992a;
+      --teacher-label:  #d4a83a;
+      --divider:        #2e3840;
+      --vocab-bg:       #1a1e22;
+      --try-bg:         #142030;
+      --try-border:     #5b9bd5;
+      --key-bg:         #142030;
+      --key-border:     #5b9bd5;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:             #161e25;
+    --bg-alt:         #1c2530;
+    --fg:             #e0d9cf;
+    --fg-muted:       #9aabba;
+    --fg-subtle:      #607080;
+    --accent:         #5b9bd5;
+    --accent-lt:      #1a2e42;
+    --teacher-bg:     #1e1a0f;
+    --teacher-border: #c8992a;
+    --teacher-label:  #d4a83a;
+    --divider:        #2e3840;
+    --vocab-bg:       #1a1e22;
+    --try-bg:         #142030;
+    --try-border:     #5b9bd5;
+    --key-bg:         #142030;
+    --key-border:     #5b9bd5;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    padding-left:  max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0;
+  }
+
+  .toolbar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--divider);
+    padding: 0.55rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    color: var(--fg-muted);
+  }
+  .toolbar-series { font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--fg-subtle); }
+  .toolbar-chapter { color: var(--fg-muted); }
+  #toggleBtn {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.3rem 0.85rem;
+    border: 1.5px solid var(--accent);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  #toggleBtn:hover { background: var(--accent-lt); }
+  #toggleBtn.dimmed { border-color: var(--divider); color: var(--fg-subtle); }
+  #toggleBtn.dimmed:hover { background: var(--bg-alt); }
+
+  .content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-block: 3rem 5rem;
+  }
+
+  .preface {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-lt);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.97rem;
+    color: var(--fg-muted);
+  }
+  .preface p { margin: 0.5rem 0; }
+  .preface p:first-of-type { margin-top: 0; }
+  .preface p:last-child { margin-bottom: 0; }
+  .preface-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .chapter-header { margin-bottom: 2.5rem; }
+  .chapter-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.5rem;
+  }
+  .chapter-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+    color: var(--fg);
+  }
+  .chapter-rule { border: none; border-top: 2px solid var(--divider); margin: 0; }
+
+  .section { margin-bottom: 1rem; }
+  .section-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.3rem;
+    margin-top: 2rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+  .student-text p { margin: 0 0 1.1rem; }
+  .student-text p:last-child { margin-bottom: 0; }
+  .student-text em { font-style: italic; }
+  .student-text strong { font-weight: 600; }
+
+  /* Experiment callout — specific to this chapter */
+  .experiment {
+    background: var(--bg-alt);
+    border: 1.5px solid var(--divider);
+    border-radius: 8px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0;
+    font-size: 0.97rem;
+  }
+  .experiment-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.6rem;
+  }
+  .experiment p { margin: 0.5rem 0; color: var(--fg-muted); }
+  .experiment p:first-of-type { margin-top: 0; }
+  .experiment p:last-child { margin-bottom: 0; }
+  .experiment .result {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--fg);
+    margin-top: 0.75rem;
+  }
+
+  .key-idea {
+    border-left: 3px solid var(--key-border);
+    background: var(--key-bg);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.25rem;
+    margin: 1.4rem 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--fg);
+    line-height: 1.6;
+  }
+
+  .teacher-note {
+    background: var(--teacher-bg);
+    border: 1.5px solid var(--teacher-border);
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0 2rem;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--fg-muted);
+  }
+  .teacher-note-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teacher-label);
+    margin-bottom: 0.75rem;
+  }
+  .teacher-note p { margin: 0 0 0.75rem; }
+  .teacher-note p:last-child { margin-bottom: 0; }
+  .teacher-note strong { font-weight: 600; color: var(--fg); }
+
+  .section-divider { border: none; border-top: 1px solid var(--divider); margin: 2rem 0; }
+
+  .vocab-box {
+    background: var(--vocab-bg);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0 1rem;
+  }
+  .vocab-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.9rem;
+  }
+  .vocab-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.65rem; }
+  .vocab-term { font-weight: 600; margin-right: 0.3rem; color: var(--fg); }
+  .vocab-def { color: var(--fg-muted); }
+
+  .try-box {
+    background: var(--try-bg);
+    border-left: 3px solid var(--try-border);
+    border-radius: 0 8px 8px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0 1rem;
+  }
+  .try-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+  .try-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 0.9rem;
+    counter-reset: try-counter;
+  }
+  .try-list li {
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    color: var(--fg-muted); counter-increment: try-counter;
+  }
+  .try-list li::before {
+    content: counter(try-counter);
+    font-family: var(--font-ui); font-size: 0.78rem; font-weight: 600;
+    color: var(--accent); background: var(--accent-lt);
+    border-radius: 50%; min-width: 1.4rem; height: 1.4rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 0.15rem; flex-shrink: 0;
+  }
+
+  .chapter-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; margin-top: 3rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--divider);
+    font-family: var(--font-ui); font-size: 0.82rem;
+  }
+  .nav-position { color: var(--fg-subtle); text-align: center; white-space: nowrap; }
+  .nav-placeholder { color: var(--fg-subtle); white-space: nowrap; }
+  .nav-next { color: var(--accent); font-weight: 600; white-space: nowrap; }
+</style>
+
+<div class="toolbar">
+  <span class="toolbar-series">Phase Realism · Elementary</span>
+  <span class="toolbar-chapter">Chapter 4: Relationship</span>
+  <button id="toggleBtn">Hide Teacher Notes</button>
+</div>
+
+<div class="content">
+
+  <!-- Bridge -->
+  <div class="preface">
+    <div class="preface-eyebrow">Connecting to Chapters 1–3</div>
+    <p>We've built a chain: fields set conditions, conditions determine states, states change at thresholds. The chain runs in one direction.</p>
+    <p>But something in the chain has been left unnamed. When we say a field "determines" a state — what exactly is happening? Two different things can be in the same field and come out in different states. The field is the same. So what makes the difference?</p>
+    <p>The relationship between the thing and the field. And that relationship runs in both directions.</p>
+    <p>This chapter introduces the most important concept in the framework. It will change how you see everything in the chapters before it — not by overturning them, but by adding the layer that was always underneath.</p>
+  </div>
+
+  <!-- Chapter Header -->
+  <div class="chapter-header">
+    <div class="chapter-eyebrow">Chapter 4 · Unit 4: Relationship</div>
+    <h1 class="chapter-title">Things Don't Have Properties — They Have Relationships</h1>
+    <hr class="chapter-rule">
+  </div>
+
+  <!-- ─── Section 4.1 ──────────────────────────────────────── -->
+  <div class="section" style="margin-top: 2rem;">
+    <div class="section-eyebrow">Section 4.1</div>
+    <h2 class="section-title">The Same Water, Two Different Reports</h2>
+    <div class="student-text">
+      <p>Here is an experiment you can do right now, or remember having experienced.</p>
+    </div>
+
+    <div class="experiment">
+      <div class="experiment-label">Try It</div>
+      <p>Hold your left hand in warm water and your right hand in cold water for about a minute. Then put both hands into a bowl of room-temperature water at the same time.</p>
+      <p class="result">Your left hand will say: cold.<br>Your right hand will say: warm.<br>The water is the same water.</p>
+    </div>
+
+    <div class="student-text">
+      <p>What happened?</p>
+      <p>Your hands weren't reporting the temperature of the water. They were reporting the relationship between the water and where each hand came from. The left hand arrived from warmth, so the room-temperature water felt cool. The right hand arrived from cold, so the same water felt warm.</p>
+      <p>The water didn't change. What changed was the relationship between the water and the thing measuring it.</p>
+      <p>Here's another one. A red apple. Look at it in full sunlight — it's vivid, saturated, unmistakably red. Look at it under a dim orange lamp. Under blue-tinted light. In a nearly dark room. The apple changes with each context — not because anything in the apple changed, but because the relationship between the apple, the light, and your eyes changed.</p>
+      <p>What color is the apple, <em>really</em>? The question assumes the color lives inside the apple — a fixed property it carries everywhere. But color is what happens when light of certain wavelengths hits a surface and your visual system responds to what bounces back. The "redness" is not in the apple alone. It's in the relationship between the apple, the light, and the observer.</p>
+    </div>
+
+    <div class="key-idea">
+      What we perceive as a property is always an event between things — not a feature one of them has alone.
+    </div>
+  </div>
+
+  <!-- Teacher Note 4.1 -->
+  <div class="teacher-note" id="note-4-1">
+    <div class="teacher-note-label">Teacher's Notation — Section 4.1</div>
+    <p><strong>The temperature experiment:</strong> If possible, actually do this one in class. The physical experience of the same water feeling two temperatures simultaneously is more persuasive than any argument. It's hard to dismiss as "just perspective" when you can feel both reports in the same moment. After the experience, the question to ask is: which report is correct? The correct answer is: both, because both are accurate relational reports. Neither hand was wrong. They were in different relationships with the same water.</p>
+    <p><strong>Color as relational:</strong> This is not color relativism. We are not saying red is in the eye of the beholder or that color is subjective. We are saying the phenomenon we call "red" is an objective relational event: a specific surface structure interacting with specific light wavelengths interacting with specific photoreceptors. All of those factors are real. The relationship between them produces what we call color. Change any one of the factors, and the relationship changes — and so does what we observe. The relationship is the thing. None of the parts alone is "color."</p>
+    <p><strong>Philosophical lineage:</strong> This move has roots in Whitehead's process philosophy, relational quantum mechanics (Rovelli), and Buddhist epistemology — all of which arrived at similar conclusions through different paths. The curriculum doesn't cite these; it doesn't need to. But if a student or parent asks "is this established science?" the answer is: yes, this is a live and well-regarded position in both physics and philosophy, and several major frameworks in quantum foundations hold versions of it. Phase Realism is a specific development within a larger tradition.</p>
+    <p><strong>What this does not say:</strong> It does not say that nothing is real. The relationship is real. The apple's surface structure is real. The light wavelengths are real. What is not real — as a standalone property of the apple alone — is "redness." This distinction will be needed when students or parents push back with "but surely things are real." They are. Their isolated properties are descriptions of relational patterns.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 4.2 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 4.2</div>
+    <h2 class="section-title">Properties Are Shorthand</h2>
+    <div class="student-text">
+      <p>When you say a surface is "cold," you mean: colder than your skin right now, under these conditions, as felt by your particular nervous system at this moment.</p>
+      <p>When you say something is "heavy," you mean: heavier than what you're comparing it to, under this gravitational field, relative to your ability to lift it.</p>
+      <p>When you say something is "hard," you mean: harder than the things that scratch off it; softer than the things that could scratch it. Diamond is the hardest known natural material on Earth. But that just means nothing found on Earth can scratch it. Diamond is hard <em>relative to the things it's been compared with</em>. "Hardness" is a description of a relationship, not a feature diamond carries with it into every possible context.</p>
+      <p>Every property you can name works like this, once you look carefully. "Loud" is loud relative to the ambient sound and the hearer's sensitivity. "Fast" is fast relative to what it's being compared to. "Dangerous" is dangerous relative to a specific body in a specific situation.</p>
+    </div>
+
+    <div class="key-idea">
+      A property is a reliable description of how something behaves in certain relationships. It is not a feature the thing has on its own, independent of everything else.
+    </div>
+
+    <div class="student-text">
+      <p>This doesn't make properties useless. "The table is cold" communicates something real and practical. The shorthand works — most of the time, for most purposes, the relationships involved are stable enough that the shorthand holds.</p>
+      <p>But the shorthand hides what's actually happening. When you see through it — when you notice that what's called a property is a description of a relational pattern — something shifts. You start asking better questions: <em>Related to what? Under what conditions? For which observer? At which scale?</em></p>
+      <p>Those questions get you further than "what are its properties?" They get you to what's actually going on.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 4.2 -->
+  <div class="teacher-note" id="note-4-2">
+    <div class="teacher-note-label">Teacher's Notation — Section 4.2</div>
+    <p><strong>The hardness example:</strong> The Mohs scale is worth mentioning to sharp students — it is explicitly a relational measurement. A mineral's Mohs hardness number is defined by what it can scratch and what scratches it. The scale is built from relationships, not from any intrinsic property of the mineral. This is not unusual or hidden: scientific measurement very often already encodes relationality. Phase Realism is making this structure explicit and primary, not inventing it.</p>
+    <p><strong>"Properties are not useless" — this is important:</strong> The curriculum is not arguing that science is wrong or that everyday language misleads us. It is arguing that the shorthand, while useful, is downstream of a more accurate relational description. Students who take this chapter as license to say "nothing means anything" have misread it. The correction: relationships are as real as — arguably more real than — isolated objects. We're not losing properties; we're locating them correctly.</p>
+    <p><strong>Common pushback — "but mass is intrinsic":</strong> Mass is the best candidate for a truly intrinsic property. In standard physics, an object's rest mass is the same in every reference frame. A rigorous Phase Realism response: mass is defined by how a thing responds to gravitational and inertial fields — it is a relational disposition, even if the number is stable. This is technically subtle and probably beyond Level 1. At this level, it's enough to say: mass is the best counterexample, and it's worth holding it as an open question. The interesting thing is that even mass starts to look relational when you look closely. This is a productive ambiguity to leave open rather than resolve prematurely.</p>
+    <p><strong>The four better questions:</strong> "Related to what? Under what conditions? For which observer? At which scale?" — these are the Phase Realism observation questions. They should become a habit. Consider posting them in the classroom during this unit. They function as the analytical toolkit that replaces "what are its properties?"</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 4.3 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 4.3</div>
+    <h2 class="section-title">A World Made of Relationships</h2>
+    <div class="student-text">
+      <p>Go back to the chapters we've read.</p>
+      <p>Chapter 1 said: a state is how something is behaving right now. Chapter 2 said: the field sets the conditions. Chapter 3 said: thresholds are where conditions push far enough that the state reorganizes.</p>
+      <p>Now here's the next layer of all of it.</p>
+      <p>A sponge and a rock are both sitting in a river. The current is the same field. The sponge absorbs and deforms; the rock sits still. Same field, different responses — because the sponge and the rock have different relationships with that field. The state each one is in is determined not just by the field, but by the relationship between the thing and the field.</p>
+      <p>And here's what follows from that: the state of something is not just in the thing, and not just in the field. It is in the relationship between them. To understand the state fully, you have to understand the relationship.</p>
+      <p>This is true at every scale. You relate to your environment. Your body relates to the air, the food, the temperature, the sounds. Your attention relates to whatever it lands on. Every one of these relationships produces what we observe — and what we observe, we call "the state."</p>
+    </div>
+
+    <div class="key-idea">
+      The state of something is its current relational configuration — not a property it has alone, but a description of how it stands in relation to the fields and things around it.
+    </div>
+
+    <div class="student-text">
+      <p>This means something for how we observe. When you notice a state — in water, in a room, in a person, in yourself — you are not noticing a thing-in-isolation. You are noticing a relationship. To understand it, you have to ask: what is this in relationship with? How strong is that relationship? What would it take to change it?</p>
+      <p>Those are the real observational questions. And they lead somewhere the old questions don't.</p>
+      <p>Here is a harder version of the same idea. You behave differently with different people — not because you are a different person, but because you are in a different relationship. The "you" in the relationship is real. The other person is real. What changes is what happens between you — which changes the state you're both in, which changes how you behave. This is not performance. This is physics, at the scale of people.</p>
+      <p>The world is not made of things with properties sitting next to each other. It is made of relationships, and what we call "things" and "properties" are reliable patterns in those relationships — useful names for what persists across many observations, across many contexts, across time.</p>
+      <p>The pattern is real. The relationship that produces it is more real.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 4.3 -->
+  <div class="teacher-note" id="note-4-3">
+    <div class="teacher-note-label">Teacher's Notation — Section 4.3</div>
+    <p><strong>The sponge and rock:</strong> Two things in the same field, different relational states. This is the cleanest pedagogical example for the relational state concept. What determines how the sponge and rock relate to the current? Their own structure — which is itself a product of their history, their prior relationships, their accumulated organization. The curriculum doesn't chase this regress at Level 1, but it's there if a student asks: "Well, what determines how a thing relates to a field?" That question is a good one. The answer is: its current structure, which is the product of all its prior relationships. Everything is relational, all the way down.</p>
+    <p><strong>Deepening Chapter 1:</strong> "The state of something is its current relational configuration" is a revision of Chapter 1's definition ("how something is behaving right now"). It's more precise, and it unifies all four chapters. Chapter 1's definition was correct and useful; this is what it means at a deeper level. Students who feel this is contradicting Chapter 1 should be helped to see the relationship between the two framings: Chapter 1's definition describes what you observe; Chapter 4's definition describes why the observation is what it is.</p>
+    <p><strong>The interpersonal paragraph:</strong> "You behave differently with different people — not because you are a different person, but because you are in a different relationship." This is the most personally relevant application of the relational framework, and for many students it will be the most vivid. Handle it with care. The point is not that identity is unstable or that people are incoherent — it is that what we observe of a person is always a person-in-relationship. The "you" is real; the variation is relational. This is philosophically and psychologically important, and it should not be trivialized ("you change because you're trying to fit in") or catastrophized ("there's no real you").</p>
+    <p><strong>"Physics, at the scale of people":</strong> This phrase is deliberate. The curriculum is not saying social dynamics are <em>metaphorically</em> like physics. It is saying: the same structural description — relational configurations, field conditions, thresholds, states — applies at the scale of people. This is a live hypothesis, not an analogy. Students who take it seriously as a research question will be in a useful frame for the rest of the curriculum. Students who resist it should be allowed to — at Level 1, it is enough to hold it as a possible description rather than accepting it as settled.</p>
+    <p><strong>Seed for Unit 5 (Coherence):</strong> "The world is made of relationships." Coherence is what happens when a set of relationships aligns — when the parts of a system are relating to each other in a mutually reinforcing way. Incoherence is misalignment. Unit 5 builds directly on this. The closing sentences of Chapter 4 plant it: "reliable patterns in those relationships." Coherence is when those patterns stabilize and reinforce. That's Unit 5.</p>
+    <p><strong>Seed for Level 3 (particle):</strong> "Things" are reliable patterns in relationships. A particle, in the Phase Realism framework, is a stable relational configuration — a pattern in a field that persists because the relationships that produce it are stable. The particle doesn't have properties; it has characteristic relational behaviors. Everything in this chapter is preparation for that statement. Don't say it yet.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Vocabulary -->
+  <div class="vocab-box">
+    <div class="vocab-label">Key Words — Chapter 4</div>
+    <ul class="vocab-list">
+      <li><span class="vocab-term">Relationship —</span><span class="vocab-def">the way two or more things interact through a field; what actually produces what we observe and call a "property" or a "state"</span></li>
+      <li><span class="vocab-term">Property —</span><span class="vocab-def">a reliable description of how something behaves in certain relationships; not a feature the thing has alone, but a pattern in its relational behavior</span></li>
+      <li><span class="vocab-term">Relational configuration —</span><span class="vocab-def">the specific pattern of relationships a thing is currently in; another name for its state, but one that names where the state actually comes from</span></li>
+      <li><span class="vocab-term">Observer —</span><span class="vocab-def">whatever is in relationship with the thing being observed; what is observed is always a function of both the thing and the observer</span></li>
+      <li><span class="vocab-term">Intrinsic —</span><span class="vocab-def">belonging to a thing in isolation, independent of any relationship; Phase Realism asks whether any property is truly intrinsic — and finds few candidates</span></li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Vocab -->
+  <div class="teacher-note" id="note-4-vocab">
+    <div class="teacher-note-label">Teacher's Notation — Key Words</div>
+    <p><strong>"Observer"</strong> is introduced here carefully. It does not mean only human observers. An observer is anything in a relationship with the thing being observed — a thermometer observing temperature, a river observing the rock in its current, a magnet observing iron filings. This broad definition is important: it prevents the concept from sliding into subjectivism ("it's only real if a person observes it") while still honoring the role of the observing system in producing what is observed.</p>
+    <p><strong>"Intrinsic"</strong> appears in the vocabulary not to affirm that intrinsic properties exist, but to name what Phase Realism calls into question. Students benefit from having the word — it lets them articulate the contrast. "Is this intrinsic or relational?" is a useful question at every level. The answer at Level 1: most things we call intrinsic turn out to be stable relational patterns when examined carefully.</p>
+  </div>
+
+  <!-- Try This -->
+  <div class="try-box">
+    <div class="try-label">Try This</div>
+    <ul class="try-list">
+      <li>If you can, do the temperature experiment: one hand in warm water, one in cold, for a minute. Then both in room-temperature water. What does each hand report? Which report is "correct"? What does it mean that both are accurate at the same time?</li>
+      <li>Choose something you'd describe as "heavy." Now ask: heavy compared to what? Can you describe a context where the same object would seem light? What does that tell you about where "heaviness" actually lives?</li>
+      <li>Think of a way you act differently with different people — not because you're being fake, but because the relationship is genuinely different. Can you describe it as two different relational states? What changes? What stays the same?</li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Try This -->
+  <div class="teacher-note" id="note-4-try">
+    <div class="teacher-note-label">Teacher's Notation — Try This</div>
+    <p><strong>Exercise 1</strong> (temperature experiment) is the anchor exercise for the chapter. The experience is the argument. A student who has felt both hands reporting different temperatures from the same water has encountered relationality in their own nervous system. After the experiment, the conceptual work is easier. If time or materials are a constraint, asking students to <em>remember</em> a moment when the same thing felt different at different times achieves the same conceptual end.</p>
+    <p><strong>Exercise 2</strong> (heaviness): the goal is to have students locate "heaviness" not in the object but in the relationship between the object, the gravitational field, and the body interacting with it. A bowling ball is heavy to a child; manageable to an adult; weightless in orbit; crushing under higher gravity. None of these contradicts the others — they're accurate relational reports from different relational contexts. "Where does heaviness actually live?" is the question. The answer: in the relationship.</p>
+    <p><strong>Exercise 3</strong> (relational self): this is the most personally resonant exercise and should be offered as optional reflection, not required disclosure. The framing "not because you're being fake" is deliberate — it preempts the self-judgment that often arises when students notice their behavior varies across contexts. The relational framework says: variation across relationships is not inconsistency. It is accurate responsiveness to different relational conditions. A student who has struggled with feeling "fake" for behaving differently in different social contexts may find this reframing significant. Handle with care and without probing.</p>
+  </div>
+
+  <!-- Chapter Nav -->
+  <div class="chapter-nav">
+    <span class="nav-next" style="color: var(--fg-muted); font-weight: 400;">← Chapter 3: Thresholds</span>
+    <span class="nav-position">Chapter 4 · Unit 4 of 6</span>
+    <span class="nav-next">Chapter 5: Coherence →</span>
+  </div>
+
+</div>
+
+<script>
+  const noteIds = [
+    'note-4-1', 'note-4-2', 'note-4-3', 'note-4-vocab', 'note-4-try'
+  ];
+  const btn = document.getElementById('toggleBtn');
+  let visible = true;
+
+  function setNotes(show) {
+    visible = show;
+    noteIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = !show;
+    });
+    btn.textContent = show ? 'Hide Teacher Notes' : 'Show Teacher Notes';
+    btn.classList.toggle('dimmed', show);
+    try { localStorage.setItem('pr_teacher', show ? '1' : '0'); } catch(e) {}
+  }
+
+  btn.addEventListener('click', () => setNotes(!visible));
+
+  try {
+    const saved = localStorage.getItem('pr_teacher');
+    if (saved === '0') setNotes(false);
+  } catch(e) {}
+</script>
+
+</body></html>

@@ -1,0 +1,522 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phase Realism — Chapter 5: Coherence</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@400;600&display=swap">
+
+<style>
+  :root {
+    --bg:              #faf8f4;
+    --bg-alt:          #f2ede6;
+    --fg:              #1c2830;
+    --fg-muted:        #4a5660;
+    --fg-subtle:       #7e8c97;
+    --accent:          #2c5a8a;
+    --accent-lt:       #e8f0f9;
+    --teacher-bg:      #fffbf0;
+    --teacher-border:  #c8992a;
+    --teacher-label:   #8a6610;
+    --divider:         #ddd8cf;
+    --vocab-bg:        #f0ece6;
+    --try-bg:          #e8eff8;
+    --try-border:      #2c5a8a;
+    --key-bg:          #edf3fb;
+    --key-border:      #2c5a8a;
+    --compare-bg:      #f5f0eb;
+    --compare-border:  #b0a898;
+    --font-display:    'Lora', Georgia, serif;
+    --font-body:       'Lora', Georgia, serif;
+    --font-ui:         'Source Sans 3', system-ui, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:             #161e25;
+      --bg-alt:         #1c2530;
+      --fg:             #e0d9cf;
+      --fg-muted:       #9aabba;
+      --fg-subtle:      #607080;
+      --accent:         #5b9bd5;
+      --accent-lt:      #1a2e42;
+      --teacher-bg:     #1e1a0f;
+      --teacher-border: #c8992a;
+      --teacher-label:  #d4a83a;
+      --divider:        #2e3840;
+      --vocab-bg:       #1a1e22;
+      --try-bg:         #142030;
+      --try-border:     #5b9bd5;
+      --key-bg:         #142030;
+      --key-border:     #5b9bd5;
+      --compare-bg:     #1a1e22;
+      --compare-border: #3a4450;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:             #161e25;
+    --bg-alt:         #1c2530;
+    --fg:             #e0d9cf;
+    --fg-muted:       #9aabba;
+    --fg-subtle:      #607080;
+    --accent:         #5b9bd5;
+    --accent-lt:      #1a2e42;
+    --teacher-bg:     #1e1a0f;
+    --teacher-border: #c8992a;
+    --teacher-label:  #d4a83a;
+    --divider:        #2e3840;
+    --vocab-bg:       #1a1e22;
+    --try-bg:         #142030;
+    --try-border:     #5b9bd5;
+    --key-bg:         #142030;
+    --key-border:     #5b9bd5;
+    --compare-bg:     #1a1e22;
+    --compare-border: #3a4450;
+    color-scheme: dark;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    padding-left:  max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0;
+  }
+
+  .toolbar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--divider);
+    padding: 0.55rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    color: var(--fg-muted);
+  }
+  .toolbar-series { font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--fg-subtle); }
+  #toggleBtn {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.3rem 0.85rem;
+    border: 1.5px solid var(--accent);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  #toggleBtn:hover { background: var(--accent-lt); }
+  #toggleBtn.dimmed { border-color: var(--divider); color: var(--fg-subtle); }
+  #toggleBtn.dimmed:hover { background: var(--bg-alt); }
+
+  .content { max-width: 680px; margin: 0 auto; padding-block: 3rem 5rem; }
+
+  .preface {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-lt);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.97rem;
+    color: var(--fg-muted);
+  }
+  .preface p { margin: 0.5rem 0; }
+  .preface p:first-of-type { margin-top: 0; }
+  .preface p:last-child { margin-bottom: 0; }
+  .preface-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  .chapter-header { margin-bottom: 2.5rem; }
+  .chapter-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.5rem;
+  }
+  .chapter-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+  }
+  .chapter-rule { border: none; border-top: 2px solid var(--divider); margin: 0; }
+
+  .section { margin-bottom: 1rem; }
+  .section-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.3rem;
+    margin-top: 2rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+  }
+  .student-text p { margin: 0 0 1.1rem; }
+  .student-text p:last-child { margin-bottom: 0; }
+  .student-text em { font-style: italic; }
+
+  /* Comparison block — specific to this chapter */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1.5px solid var(--compare-border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+  }
+  .compare-col { padding: 1rem 1.2rem; }
+  .compare-col:first-child { border-right: 1.5px solid var(--compare-border); }
+  .compare-head {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .compare-head.incoherent { color: var(--fg-subtle); }
+  .compare-head.coherent { color: var(--accent); }
+  .compare-body { color: var(--fg-muted); line-height: 1.6; }
+  .compare-body strong { color: var(--fg); font-weight: 600; }
+  @media (max-width: 480px) {
+    .compare { grid-template-columns: 1fr; }
+    .compare-col:first-child { border-right: none; border-bottom: 1.5px solid var(--compare-border); }
+  }
+
+  .key-idea {
+    border-left: 3px solid var(--key-border);
+    background: var(--key-bg);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.25rem;
+    margin: 1.4rem 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+  }
+
+  .teacher-note {
+    background: var(--teacher-bg);
+    border: 1.5px solid var(--teacher-border);
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0 2rem;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--fg-muted);
+  }
+  .teacher-note-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teacher-label);
+    margin-bottom: 0.75rem;
+  }
+  .teacher-note p { margin: 0 0 0.75rem; }
+  .teacher-note p:last-child { margin-bottom: 0; }
+  .teacher-note strong { font-weight: 600; color: var(--fg); }
+
+  .section-divider { border: none; border-top: 1px solid var(--divider); margin: 2rem 0; }
+
+  .vocab-box { background: var(--vocab-bg); border-radius: 8px; padding: 1.25rem 1.5rem; margin: 2rem 0 1rem; }
+  .vocab-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.9rem;
+  }
+  .vocab-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.65rem; }
+  .vocab-term { font-weight: 600; margin-right: 0.3rem; color: var(--fg); }
+  .vocab-def { color: var(--fg-muted); }
+
+  .try-box {
+    background: var(--try-bg);
+    border-left: 3px solid var(--try-border);
+    border-radius: 0 8px 8px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0 1rem;
+  }
+  .try-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+  .try-list {
+    list-style: none; padding: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 0.9rem;
+    counter-reset: try-counter;
+  }
+  .try-list li {
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    color: var(--fg-muted); counter-increment: try-counter;
+  }
+  .try-list li::before {
+    content: counter(try-counter);
+    font-family: var(--font-ui); font-size: 0.78rem; font-weight: 600;
+    color: var(--accent); background: var(--accent-lt);
+    border-radius: 50%; min-width: 1.4rem; height: 1.4rem;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 0.15rem; flex-shrink: 0;
+  }
+
+  .chapter-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 1rem; margin-top: 3rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--divider);
+    font-family: var(--font-ui); font-size: 0.82rem;
+  }
+  .nav-position { color: var(--fg-subtle); text-align: center; white-space: nowrap; }
+  .nav-next { color: var(--accent); font-weight: 600; white-space: nowrap; }
+</style>
+
+<div class="toolbar">
+  <span class="toolbar-series">Phase Realism · Elementary</span>
+  <span style="color: var(--fg-muted); font-size: 0.78rem;">Chapter 5: Coherence</span>
+  <button id="toggleBtn">Hide Teacher Notes</button>
+</div>
+
+<div class="content">
+
+  <!-- Bridge -->
+  <div class="preface">
+    <div class="preface-eyebrow">Connecting to Chapter 4</div>
+    <p>Chapter 4 said: the world is made of relationships, and what we call properties are descriptions of relational patterns.</p>
+    <p>But not all relationships are equal. Some relationships reinforce each other. Some cancel each other out. Some work in the same direction; some pull against each other.</p>
+    <p>The difference between those configurations has a name, and it turns out to be one of the most consequential differences in all of physics.</p>
+  </div>
+
+  <!-- Chapter Header -->
+  <div class="chapter-header">
+    <div class="chapter-eyebrow">Chapter 5 · Unit 5: Coherence</div>
+    <h1 class="chapter-title">When Relationships Align</h1>
+    <hr class="chapter-rule">
+  </div>
+
+  <!-- ─── Section 5.1 ──────────────────────────────────────── -->
+  <div class="section" style="margin-top: 2rem;">
+    <div class="section-eyebrow">Section 5.1</div>
+    <h2 class="section-title">The Same Parts, Arranged Differently</h2>
+    <div class="student-text">
+      <p>A flashlight and a laser both work with the same raw material: photons — the smallest possible pieces of light. In a flashlight, the photons scatter outward in every direction, different wavelengths, all out of sync with each other. In a laser, the photons move together: same wavelength, same direction, all in phase — pulsing in unison as if they'd agreed on it.</p>
+      <p>The photons in a laser are not special photons. They're the same kind of thing as the photons in a flashlight. What makes the laser different is not what its parts are — it's how its parts are related to each other.</p>
+    </div>
+
+    <div class="compare">
+      <div class="compare-col">
+        <div class="compare-head incoherent">Flashlight — Incoherent</div>
+        <div class="compare-body">Photons going in every direction. Different wavelengths. Out of phase. The light spreads and dims over distance. <strong>Cannot cut steel. Cannot carry a signal across a continent.</strong></div>
+      </div>
+      <div class="compare-col">
+        <div class="compare-head coherent">Laser — Coherent</div>
+        <div class="compare-body">Photons aligned in direction, wavelength, phase. The beam holds its intensity over distance. <strong>Can cut through steel. Can carry information thousands of miles without loss.</strong></div>
+      </div>
+    </div>
+
+    <div class="student-text">
+      <p>Same photons. The difference is the relationship — aligned or scattered.</p>
+      <p>That alignment is called <em>coherence</em>. When the relationships between the parts of a system are reinforcing each other, working in the same direction, in phase with each other — the system is coherent.</p>
+      <p>The capabilities that come with coherence — cutting steel, carrying information, doing things none of the photons could do alone — are not in any individual part. They are in the coherence itself. They exist because of the alignment, and only for as long as the alignment holds.</p>
+    </div>
+
+    <div class="key-idea">
+      Coherence is what happens when the relationships between a system's parts are aligned — mutually reinforcing, working in the same direction, in phase with each other.
+    </div>
+
+    <div class="student-text">
+      <p>The same pattern appears everywhere. An orchestra playing in tune — each instrument's vibrations in harmonic relationship with the others — produces something that moves through a concert hall differently than any instrument playing alone. Not louder, not more. <em>Different</em>: a coherent sound field that carries in ways no single instrument achieves.</p>
+      <p>Incoherence is not the absence of sound. It's the presence of sound whose relationships are not aligned — instruments playing out of tune, rhythms not matching, frequencies interfering with each other. The energy is there. The coherence isn't.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 5.1 -->
+  <div class="teacher-note" id="note-5-1">
+    <div class="teacher-note-label">Teacher's Notation — Section 5.1</div>
+    <p><strong>The laser example:</strong> This is the canonical physics demonstration of coherence, and it's worth dwelling on. The contrast table in the student text is designed to make the point viscerally: the same material, dramatically different capabilities, entirely due to relational alignment. A laser pointer in class is a good prop. Note that laser safety is a practical concern; this doesn't need to be a demonstration of cutting power — the pointer shows that the beam holds its intensity at distance, unlike a flashlight, which diffuses. That alone is the coherence signature.</p>
+    <p><strong>Coherence in physics:</strong> Laser coherence is the textbook example, but coherence appears throughout physics: superconductivity (electrons moving in coherent pairs with no resistance), superfluidity (atoms in a Bose-Einstein condensate), quantum coherence (superposition states before decoherence). Students don't need these examples at Level 1, but teachers should know they exist — the concept is not a metaphor borrowed from physics, it <em>is</em> physics, appearing at every scale from quantum to classical. Phase Realism treats it as a scale-invariant structural property, which the examples support.</p>
+    <p><strong>Orchestra vs. noise:</strong> The music example is productive because students have embodied experience of both. Ask: what do you notice differently about coherent music versus incoherent noise, even when both are equally loud? This question surfaces the experiential signature of coherence — the carrying quality, the way it moves through a space differently. Students often describe coherent sound as "full" or "clear"; incoherent sound as "muddy" or "harsh." These are accurate phenomenological reports of a real physical difference.</p>
+    <p><strong>Anticipating the next chapter:</strong> The capabilities of a coherent system — what it can do that its parts cannot — will connect directly to Chapter 6 (Sensing). A person with developed coherent attention has capabilities that scattered attention doesn't: the ability to track subtle field changes, detect subcritical states, read relational configurations. The structural parallel is exact. Don't name this connection yet; let Chapter 6 make it.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 5.2 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 5.2</div>
+    <h2 class="section-title">What Coherence Produces — and What Incoherence Does</h2>
+    <div class="student-text">
+      <p>When relationships align, the system gains capabilities that none of its parts had separately. The laser cuts. The orchestra carries. A team of people working toward the same goal, with shared understanding of what they're doing, can accomplish things that the same number of people working separately could not.</p>
+      <p>This is not magic. It is a direct consequence of the relational structure. The capabilities are produced by the alignment, and they are only present as long as the alignment is.</p>
+      <p>Coherence also has degrees. A system is not either fully coherent or fully incoherent — there's a range, and a system can move along it. A conversation that starts scattered can become more coherent as the people find their shared thread. A team that starts pulling in different directions can align. The reverse also happens: a coherent system can lose its coherence when conditions change or relationships are disrupted.</p>
+      <p>Now look at the other side.</p>
+      <p>Incoherence is not the absence of energy or activity. It is a specific relational configuration where the parts are oriented against each other — out of phase, pulling in different directions, or simply disconnected. A room full of people all talking at once, none listening, is highly active. The activity is all there. The coherence isn't — and the result is that no individual voice carries, no message lands, nothing is built that wasn't brought in.</p>
+    </div>
+
+    <div class="key-idea">
+      Coherence is not always peaceful and incoherence is not always bad. A thunderstorm is highly coherent — its winds, moisture, and pressure are all aligned in a self-reinforcing pattern. The question is always: what relational configuration is this, and what does it produce?
+    </div>
+
+    <div class="student-text">
+      <p>There's something important in that warning. Coherence in the wrong direction — relationships aligned toward a destructive pattern — is more powerful than scattered incoherence. A coherent argument for something wrong is more dangerous than a scattered incoherent one. This is worth knowing. The framework doesn't tell you what to align toward; it only describes what happens when you do.</p>
+      <p>One more thing about coherence that matters for everything else in this curriculum: coherence thresholds. A system approaching coherence doesn't always slide smoothly into it. Often, there is a threshold — a point below which the system stays scattered, and above which coherence suddenly appears. Below the threshold: individual, unrelated parts. Above it: a whole that behaves differently than the sum. This is Chapter 3's concept applied to relational structure. The threshold to coherence can be as sudden as ice becoming water.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 5.2 -->
+  <div class="teacher-note" id="note-5-2">
+    <div class="teacher-note-label">Teacher's Notation — Section 5.2</div>
+    <p><strong>Coherence is not good:</strong> This paragraph is load-bearing. Students, and some adults, immediately want to treat coherence as the positive value and incoherence as the negative. The framework explicitly resists this. A mob in full agreement is coherent. A manipulative argument is coherent. A fever (the immune system in highly organized, coordinated response) is coherent. The question is never "is this coherent?" as an evaluation — it's "what is the coherence pattern, and what does it produce?"</p>
+    <p><strong>The room full of people talking:</strong> This example is worth developing as a thought experiment. Ask students: what would it take for that room to become coherent? What would have to change? Some answers: a shared signal (a fire alarm makes everyone suddenly coherent — all oriented toward the same thing), a shared purpose that emerges, a speaker who commands attention. Each of these is a mechanism for coherence formation — a way the threshold gets crossed. The mechanism for coherence formation is an important topic at Level 2.</p>
+    <p><strong>Coherence thresholds:</strong> This is the synthesis of Chapters 3 and 5, and it's the most technically important observation in the chapter. Bose-Einstein condensates, superconductivity, laser operation, flocking behavior in birds — these all exhibit sharp coherence thresholds: below a critical temperature or density, the system is incoherent; above it, coherence appears suddenly. This is ΔHV applied to relational structure. The transition steepness matters: some coherence transitions are gradual; some are extremely sharp. At Level 1, it's enough to name this connection. At Level 2, it becomes a central object of study.</p>
+    <p><strong>Degrees of coherence:</strong> This is important for students who want to apply the concept to their own experience. A conversation that becomes more coherent over time, attention that coheres through practice, a team that builds alignment — all of these are movement along the coherence dimension, not sudden transitions. Both the gradual and the threshold version of coherence change are real. Students should hold both.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 5.3 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 5.3</div>
+    <h2 class="section-title">Reading Coherence in the World Around You</h2>
+    <div class="student-text">
+      <p>You've been sensing coherence and incoherence your whole life. Now you have a name for it.</p>
+      <p>A room where everyone is oriented toward the same thing — following the same thread, responding to each other, building on what the previous person said — has a different quality than a room where people are scattered, side-talking, moving in different directions. Same people. Same room. Different relational configuration. You can feel the difference before you can analyze it. What you're feeling is the difference in coherence.</p>
+      <p>A conversation that flows — where each response builds on the last, where something is generated between the two people that neither brought in alone — is a coherent conversation. You probably have a word for it already: it <em>clicked</em>, it <em>connected</em>, you were <em>on the same wavelength</em>. Those descriptions are more literal than they sound. The conversation achieved relational alignment. The wavelength metaphor names what actually happened.</p>
+      <p>Your own attention works this way too. When attention is scattered — pulled simultaneously toward different things, none of them fully — there's a friction to it. Things take more effort than they seem like they should. When attention is coherent — gathered fully on one thing, the different parts of your focus aligned — the quality of engagement is different. It doesn't always feel easier, but it feels more available. You can bring more to bear.</p>
+    </div>
+
+    <div class="key-idea">
+      Coherence and incoherence are not just concepts for understanding lasers and orchestras. They describe the relational structure of rooms, conversations, attention, and bodies — at every scale, the pattern is the same.
+    </div>
+
+    <div class="student-text">
+      <p>None of this is metaphor. When you sense the coherence of a room, you are detecting a real relational configuration. When a conversation coheres, something real changed in the relationships between the people in it. When your attention gathers, the neural relationships that produce your focus are literally becoming more aligned.</p>
+      <p>The concept that describes a laser describes a focused mind. The scale is different. The structural description is the same: relationships aligned, capabilities emerging that weren't present before the alignment.</p>
+      <p>Learning to read coherence — to notice when a system is aligning and when it's scattering, to sense the direction things are moving before the threshold is crossed — is a skill. It's built on everything in the chapters before this one: states, fields, thresholds, relationships. Those weren't separate topics. They were layers of the same question, and coherence is where they come together.</p>
+      <p>The next chapter is about sensing — about the perceptual abilities this whole curriculum has been quietly building toward. What you've been learning to name, you've been learning to use.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 5.3 -->
+  <div class="teacher-note" id="note-5-3">
+    <div class="teacher-note-label">Teacher's Notation — Section 5.3</div>
+    <p><strong>"You've been sensing coherence and incoherence your whole life":</strong> This is the third time the curriculum uses this construction (Chapters 2 and 3 used it for field-sensing and subcritical-state sensing). By now it should feel like a rhythm. The pattern being established is: every major concept in this curriculum is also a description of something the student already does perceptually, and the curriculum's job is to give them precise language for what they already know. Chapter 6 makes this the explicit subject.</p>
+    <p><strong>"On the same wavelength":</strong> The aside here is deliberate and worth dwelling on with students. Everyday language often encodes physical descriptions more accurately than people realize. "Same wavelength," "in sync," "resonating" — these are relational coherence descriptions that people use intuitively for interpersonal alignment. Phase Realism is not importing a metaphor; it's noting that the intuitive language already pointed at the right structural description. The colloquial and the technical are pointing at the same thing.</p>
+    <p><strong>Attention coherence — what to be careful about:</strong> The section describes attention coherence carefully, noting it doesn't "always feel easier." This is important. Some students who struggle with attention coherence — who experience their attention as chronically scattered — may read this section and feel implicitly criticized. The corrective framing: coherence is a description of a relational configuration, not a moral quality. Scattered attention is a real relational state, not a failure. It may reflect that the student's system is responding to too many signals simultaneously, or is near a threshold in ways that make sustained alignment difficult. These are structural facts, not character deficits. If time permits, asking students how their attention state varies across different contexts (when they're playing, versus in a boring class, versus absorbed in something they love) surfaces that everyone experiences both states — the differences are contextual, not fixed.</p>
+    <p><strong>The closing paragraph as bridge:</strong> "Those weren't separate topics. They were layers of the same question." This is the most important meta-pedagogical statement in Level 1. Students who have been keeping the units mentally separate — "OK, states was Chapter 1, fields was Chapter 2" — should have this dissolved. The curriculum has been building one framework, not six separate facts. Chapter 6 (Sensing) is the proof: it is where the unified framework becomes a unified perceptual practice. The final sentence ("What you've been learning to name, you've been learning to use") should land as a recognition, not an announcement. If the curriculum has worked, students will feel it before they read it.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Vocabulary -->
+  <div class="vocab-box">
+    <div class="vocab-label">Key Words — Chapter 5</div>
+    <ul class="vocab-list">
+      <li><span class="vocab-term">Coherence —</span><span class="vocab-def">a relational configuration in which the parts of a system are aligned — mutually reinforcing, in phase, working in the same direction — such that the system has capabilities its parts do not have separately</span></li>
+      <li><span class="vocab-term">Incoherence —</span><span class="vocab-def">a relational configuration in which the parts are misaligned — out of phase, pulling in different directions — such that the system's potential is partially or fully cancelled by its own internal friction</span></li>
+      <li><span class="vocab-term">Phase —</span><span class="vocab-def">the position in a cycle; things "in phase" are at the same point in their cycles at the same time, so they reinforce rather than cancel each other</span></li>
+      <li><span class="vocab-term">Coherence threshold —</span><span class="vocab-def">the point at which a system crosses from scattered to aligned — often sudden, like other threshold events; below it, the parts are individual; above it, the whole behaves differently</span></li>
+      <li><span class="vocab-term">Emergent —</span><span class="vocab-def">a capability or quality that arises from the relationships in a coherent system and is not present in any individual part; the laser's ability to cut is emergent from photon coherence</span></li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Vocab -->
+  <div class="teacher-note" id="note-5-vocab">
+    <div class="teacher-note-label">Teacher's Notation — Key Words</div>
+    <p><strong>"Phase"</strong> is introduced here with its technical meaning for the first time. Students already know the word "phase" from Chapter 1 — where it referred to states of matter (solid, liquid, gas are sometimes called phases). Here it means something more specific: position in a periodic cycle. These are related but distinct uses of the word. Acknowledging this to students is productive: "Phase" in Phase Realism carries both meanings — the state of something, and the position-in-cycle sense that determines whether relationships reinforce or cancel. This will be made more explicit at Level 2, where wave behavior is introduced.</p>
+    <p><strong>"Emergent"</strong> is one of the most important and most abused words in contemporary science communication. Here it is used precisely: a property that arises from relational structure and is not present in the isolated parts. Laser coherence is emergent. Consciousness (if it arises from neural coherence) would be emergent. The term does not mean "mysterious" or "impossible to explain" — it means "not reducible to the parts in isolation." Students who hear "emergent" used loosely in other contexts should be equipped to ask: emergent from what relationships? That question usually sharpens the conversation.</p>
+  </div>
+
+  <!-- Try This -->
+  <div class="try-box">
+    <div class="try-label">Try This</div>
+    <ul class="try-list">
+      <li>Think of a group of people you've been part of that worked well — a team, a family dinner, a class, a group of friends. What was the relational configuration? What made it coherent? Now think of the same group (or a different one) when it wasn't working. What had changed in the relationships?</li>
+      <li>Notice your attention right now. Would you describe it as more coherent or more scattered? What would it take to shift it in the other direction — in either direction? Is coherence always what you want?</li>
+      <li>A thunderstorm is a coherent system. Think of another example of coherence that isn't obviously "good." What makes it coherent? What does the coherence produce?</li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Try This -->
+  <div class="teacher-note" id="note-5-try">
+    <div class="teacher-note-label">Teacher's Notation — Try This</div>
+    <p><strong>Exercise 1</strong> (group coherence) works best as a pair or small-group discussion. Have students first identify what made the coherent group coherent — not in terms of "we got along" but in structural terms: what were the shared orientations? What was the field that organized everyone? Then examine what changed when it didn't work. Disconnection in a group is usually a coherence loss: some members still aligned, others pulling in different directions, the relational structure fragmented. Students should be able to say something more precise than "it went badly" — something about which relationships were misaligned and how.</p>
+    <p><strong>Exercise 2</strong> (attention right now) is a live practice exercise. Give students thirty seconds of silence before asking them to answer. The point is not to achieve attention coherence on command — that's not usually how it works. The point is to observe whatever state they're in and describe it accurately. "More scattered" is a valid answer. "I don't know" is a valid answer. What the exercise builds is the observational habit of noticing attentional state as a relational configuration, not just as a subjective feeling.</p>
+    <p><strong>Exercise 3</strong> (coherent storm) is designed to dislodge the good/coherent = bad/incoherent mapping before it calcifies. Good answers include: a market bubble (highly coherent feedback loop driving prices up); an epidemic (viral spread is a coherent relational pattern); a crowd at a concert (coherent emotional state); a fire (the combustion reactions are mutually reinforcing). The productive follow-up question: who or what suffers the consequences of this coherence? Coherence produces capability; the direction of that capability is a separate question, and usually an ethical one.</p>
+  </div>
+
+  <!-- Chapter Nav -->
+  <div class="chapter-nav">
+    <span class="nav-next" style="color: var(--fg-muted); font-weight: 400;">← Chapter 4: Relationship</span>
+    <span class="nav-position">Chapter 5 · Unit 5 of 6</span>
+    <span class="nav-next">Chapter 6: Sensing →</span>
+  </div>
+
+</div>
+
+<script>
+  const noteIds = [
+    'note-5-1', 'note-5-2', 'note-5-3', 'note-5-vocab', 'note-5-try'
+  ];
+  const btn = document.getElementById('toggleBtn');
+  let visible = true;
+
+  function setNotes(show) {
+    visible = show;
+    noteIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = !show;
+    });
+    btn.textContent = show ? 'Hide Teacher Notes' : 'Show Teacher Notes';
+    btn.classList.toggle('dimmed', show);
+    try { localStorage.setItem('pr_teacher', show ? '1' : '0'); } catch(e) {}
+  }
+
+  btn.addEventListener('click', () => setNotes(!visible));
+  try {
+    const saved = localStorage.getItem('pr_teacher');
+    if (saved === '0') setNotes(false);
+  } catch(e) {}
+</script>
+
+</body></html>

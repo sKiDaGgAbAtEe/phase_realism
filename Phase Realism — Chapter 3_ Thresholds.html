@@ -1,0 +1,553 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phase Realism — Chapter 3: Thresholds</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Source+Sans+3:wght@400;600&display=swap">
+
+<style>
+  /* ── Tokens ───────────────────────────────────────────────── */
+  :root {
+    --bg:              #faf8f4;
+    --bg-alt:          #f2ede6;
+    --fg:              #1c2830;
+    --fg-muted:        #4a5660;
+    --fg-subtle:       #7e8c97;
+    --accent:          #2c5a8a;
+    --accent-lt:       #e8f0f9;
+    --teacher-bg:      #fffbf0;
+    --teacher-border:  #c8992a;
+    --teacher-label:   #8a6610;
+    --divider:         #ddd8cf;
+    --vocab-bg:        #f0ece6;
+    --try-bg:          #e8eff8;
+    --try-border:      #2c5a8a;
+    --key-bg:          #edf3fb;
+    --key-border:      #2c5a8a;
+    --font-display:    'Lora', Georgia, serif;
+    --font-body:       'Lora', Georgia, serif;
+    --font-ui:         'Source Sans 3', system-ui, sans-serif;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:             #161e25;
+      --bg-alt:         #1c2530;
+      --fg:             #e0d9cf;
+      --fg-muted:       #9aabba;
+      --fg-subtle:      #607080;
+      --accent:         #5b9bd5;
+      --accent-lt:      #1a2e42;
+      --teacher-bg:     #1e1a0f;
+      --teacher-border: #c8992a;
+      --teacher-label:  #d4a83a;
+      --divider:        #2e3840;
+      --vocab-bg:       #1a1e22;
+      --try-bg:         #142030;
+      --try-border:     #5b9bd5;
+      --key-bg:         #142030;
+      --key-border:     #5b9bd5;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg:             #161e25;
+    --bg-alt:         #1c2530;
+    --fg:             #e0d9cf;
+    --fg-muted:       #9aabba;
+    --fg-subtle:      #607080;
+    --accent:         #5b9bd5;
+    --accent-lt:      #1a2e42;
+    --teacher-bg:     #1e1a0f;
+    --teacher-border: #c8992a;
+    --teacher-label:  #d4a83a;
+    --divider:        #2e3840;
+    --vocab-bg:       #1a1e22;
+    --try-bg:         #142030;
+    --try-border:     #5b9bd5;
+    --key-bg:         #142030;
+    --key-border:     #5b9bd5;
+    color-scheme: dark;
+  }
+
+  /* ── Reset / base ─────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 1.05rem;
+    line-height: 1.75;
+    padding-left:  max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    padding-block: 0;
+  }
+
+  /* ── Toolbar ──────────────────────────────────────────────── */
+  .toolbar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--divider);
+    padding: 0.55rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    color: var(--fg-muted);
+  }
+  .toolbar-series {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+  }
+  .toolbar-chapter {
+    color: var(--fg-muted);
+  }
+  #toggleBtn {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.3rem 0.85rem;
+    border: 1.5px solid var(--accent);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--accent);
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+  #toggleBtn:hover { background: var(--accent-lt); }
+  #toggleBtn.dimmed {
+    border-color: var(--divider);
+    color: var(--fg-subtle);
+  }
+  #toggleBtn.dimmed:hover { background: var(--bg-alt); }
+
+  /* ── Content wrapper ──────────────────────────────────────── */
+  .content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-block: 3rem 5rem;
+  }
+
+  /* ── Bridge / Preface ─────────────────────────────────────── */
+  .preface {
+    border-left: 3px solid var(--accent);
+    background: var(--accent-lt);
+    border-radius: 0 6px 6px 0;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 2.5rem;
+    font-size: 0.97rem;
+    color: var(--fg-muted);
+  }
+  .preface p { margin: 0.5rem 0; }
+  .preface p:first-of-type { margin-top: 0; }
+  .preface p:last-child { margin-bottom: 0; }
+  .preface-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+  }
+
+  /* ── Chapter header ───────────────────────────────────────── */
+  .chapter-header { margin-bottom: 2.5rem; }
+  .chapter-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.5rem;
+  }
+  .chapter-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+    font-weight: 600;
+    line-height: 1.15;
+    text-wrap: balance;
+    margin: 0 0 1rem;
+    color: var(--fg);
+  }
+  .chapter-rule {
+    border: none;
+    border-top: 2px solid var(--divider);
+    margin: 0;
+  }
+
+  /* ── Section ──────────────────────────────────────────────── */
+  .section { margin-bottom: 1rem; }
+  .section-eyebrow {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.3rem;
+    margin-top: 2rem;
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 1rem;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+  .student-text p { margin: 0 0 1.1rem; }
+  .student-text p:last-child { margin-bottom: 0; }
+  .student-text em { font-style: italic; }
+  .student-text strong { font-weight: 600; }
+
+  /* ── Key idea ─────────────────────────────────────────────── */
+  .key-idea {
+    border-left: 3px solid var(--key-border);
+    background: var(--key-bg);
+    border-radius: 0 6px 6px 0;
+    padding: 0.9rem 1.25rem;
+    margin: 1.4rem 0;
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--fg);
+    line-height: 1.6;
+  }
+
+  /* ── Teacher note ─────────────────────────────────────────── */
+  .teacher-note {
+    background: var(--teacher-bg);
+    border: 1.5px solid var(--teacher-border);
+    border-radius: 6px;
+    padding: 1.1rem 1.4rem;
+    margin: 1.5rem 0 2rem;
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: var(--fg-muted);
+  }
+  .teacher-note-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teacher-label);
+    margin-bottom: 0.75rem;
+  }
+  .teacher-note p { margin: 0 0 0.75rem; }
+  .teacher-note p:last-child { margin-bottom: 0; }
+  .teacher-note strong { font-weight: 600; color: var(--fg); }
+
+  /* ── Section divider ──────────────────────────────────────── */
+  .section-divider {
+    border: none;
+    border-top: 1px solid var(--divider);
+    margin: 2rem 0;
+  }
+
+  /* ── Vocabulary ───────────────────────────────────────────── */
+  .vocab-box {
+    background: var(--vocab-bg);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0 1rem;
+  }
+  .vocab-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--fg-subtle);
+    margin-bottom: 0.9rem;
+  }
+  .vocab-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .vocab-term {
+    font-weight: 600;
+    margin-right: 0.3rem;
+    color: var(--fg);
+  }
+  .vocab-def { color: var(--fg-muted); }
+
+  /* ── Try This ─────────────────────────────────────────────── */
+  .try-box {
+    background: var(--try-bg);
+    border-left: 3px solid var(--try-border);
+    border-radius: 0 8px 8px 0;
+    padding: 1.25rem 1.5rem;
+    margin: 2rem 0 1rem;
+  }
+  .try-label {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.9rem;
+  }
+  .try-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    counter-reset: try-counter;
+  }
+  .try-list li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    color: var(--fg-muted);
+    counter-increment: try-counter;
+  }
+  .try-list li::before {
+    content: counter(try-counter);
+    font-family: var(--font-ui);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-lt);
+    border-radius: 50%;
+    min-width: 1.4rem;
+    height: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.15rem;
+    flex-shrink: 0;
+  }
+
+  /* ── Chapter Nav ──────────────────────────────────────────── */
+  .chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--divider);
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+  }
+  .nav-position {
+    color: var(--fg-subtle);
+    text-align: center;
+    white-space: nowrap;
+  }
+  .nav-placeholder { color: var(--fg-subtle); white-space: nowrap; }
+  .nav-next { color: var(--accent); font-weight: 600; white-space: nowrap; }
+</style>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <span class="toolbar-series">Phase Realism · Elementary</span>
+  <span class="toolbar-chapter">Chapter 3: Thresholds</span>
+  <button id="toggleBtn">Hide Teacher Notes</button>
+</div>
+
+<div class="content">
+
+  <!-- Bridge -->
+  <div class="preface">
+    <div class="preface-eyebrow">Connecting to Chapters 1 &amp; 2</div>
+    <p>We've learned that things are in states, and that fields set the conditions that determine those states. We've seen the chain: field → conditions → state → behavior.</p>
+    <p>But the chain raises a question we haven't answered yet: when the field changes, does the state change smoothly with it — or does something else happen?</p>
+    <p>Something else happens.</p>
+  </div>
+
+  <!-- Chapter Header -->
+  <div class="chapter-header">
+    <div class="chapter-eyebrow">Chapter 3 · Unit 3: Thresholds</div>
+    <h1 class="chapter-title">The Moment Everything Changes</h1>
+    <hr class="chapter-rule">
+  </div>
+
+  <!-- ─── Section 3.1 ──────────────────────────────────────── -->
+  <div class="section" style="margin-top: 2rem;">
+    <div class="section-eyebrow">Section 3.1</div>
+    <h2 class="section-title">Not Gradually — All at Once</h2>
+    <div class="student-text">
+      <p>Watch water heat up. It gets warmer. And warmer. And warmer. The temperature is changing, but the water just looks like water — liquid, moving, the same. Nothing dramatic is happening.</p>
+      <p>Then, at a specific point — everything changes at once. Bubbles. Steam. Roiling motion. A completely different way of behaving.</p>
+      <p>That specific point is a threshold.</p>
+      <p>A threshold is not the middle of a gradual change. It's the point where the field has shifted far enough that the state flips — completely, and all at once — into something categorically new.</p>
+      <p>Below the threshold: water. Above it: steam. The moment of crossing is the threshold itself.</p>
+      <p>And here is the strange thing: right before the threshold, you can't see it coming. Water at 99°C looks exactly like water at 50°C — still liquid, still behaving like water. The flip that's about to happen is invisible until it happens.</p>
+    </div>
+
+    <div class="key-idea">
+      A threshold is not a point in the middle of a change. It's the point where one state ends and a different state begins — suddenly, completely, all at once.
+    </div>
+  </div>
+
+  <!-- Teacher Note 3.1 -->
+  <div class="teacher-note" id="note-3-1">
+    <div class="teacher-note-label">Teacher's Notation — Section 3.1</div>
+    <p><strong>The core correction:</strong> Standard curriculum treats change as gradual and continuous. More heat = more energy = smoother and smoother motion until eventually it's steam. Phase Realism says: no. At a threshold, the state reorganizes entirely. The approach is continuous; the transition is discontinuous. These are not in contradiction — they describe different things — but the emphasis in standard curriculum on smooth change obscures what is most interesting about how things actually behave.</p>
+    <p><strong>Phenomenology first:</strong> The boiling example is chosen because students have experienced it and can picture it. Begin there, not with the definition. Let them reconstruct the concept from the observation. The key teaching move is: get them to notice that 99°C and 100°C are not two degrees on the same spectrum — they are different states on either side of a real boundary.</p>
+    <p><strong>ΔHV without the name:</strong> The concept of transition steepness is embedded here — the sharpness of the flip, how sudden it is relative to the field change that caused it. ΔHV (Delta Harmonic Vector) is the operator that measures this in the full framework. It doesn't appear by name until a later level. But students who internalize Section 3.1 already understand what it's measuring. Every subsequent teaching about ΔHV will find this planted here.</p>
+    <p><strong>The subcritical condition:</strong> "Right before the threshold, you can't see it coming." This is the subcritical state — the system is approaching the threshold but hasn't crossed it. This will be named in Section 3.3. Here, just plant it: the threshold is invisible from below.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 3.2 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 3.2</div>
+    <h2 class="section-title">What Makes a Threshold Real</h2>
+    <div class="student-text">
+      <p>Not every change happens at a threshold. Some things change smoothly — a little warmer, a little brighter, a little louder, and the whole time you can feel it gradually shifting.</p>
+      <p>But some things don't change that way. They hold their state. And hold it. And hold it. And then — at some specific point — they reorganize entirely.</p>
+      <p>Ice does this. As the temperature field warms, ice doesn't become "a little melted." It stays ice — solid, structured, organized the same way — all the way up to the threshold. And then, at the threshold, it becomes water. Not mostly-water. Not ice-but-softer. Water.</p>
+      <p>The states before and after the threshold aren't just different amounts of the same thing. They're different ways of being organized. They have different structures, different behaviors, different relationships with the fields around them. The threshold is the dividing line between two genuinely different states of the same thing.</p>
+      <p>Thresholds also differ in sharpness. Some are sudden — a bolt of lightning, a snap, a crack, a moment you can point to: that's when it changed. Others are softer — the transition is still real, but the system spends some time working through it before the new state settles in. Both are thresholds. The sharpness varies.</p>
+    </div>
+
+    <div class="key-idea">
+      Before and after a threshold are not different amounts of the same state. They are different states — different organizations, different behaviors, different ways of relating to the field.
+    </div>
+
+    <div class="student-text">
+      <p>Some thresholds are reversible: water crosses into ice and can cross back into water when the field changes again. Some are not: a cooked egg cannot be uncooked. Crossing back would require a path the conditions don't allow. Both ice and the egg were at thresholds. Only one of them can return.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 3.2 -->
+  <div class="teacher-note" id="note-3-2">
+    <div class="teacher-note-label">Teacher's Notation — Section 3.2</div>
+    <p><strong>Categorical difference vs. gradual difference:</strong> This is the sharpest conceptual move in the chapter. "Different amounts of the same thing" is a continuous model. "Different ways of being organized" is a threshold model. Students who have internalized this distinction will have a fundamentally different vocabulary for talking about change — one that allows them to recognize when something has genuinely shifted rather than merely moved along a spectrum.</p>
+    <p><strong>Sharpness:</strong> The paragraph on transition sharpness quietly introduces the variable that ΔHV measures: how steep is the transition relative to the field change that caused it? Some flips are instantaneous; some take time; both are real thresholds. Students often think of thresholds as binary (crossed / not crossed), which is right — but the crossing can itself take some field-time. This nuance sets up later thinking about transition dynamics.</p>
+    <p><strong>Reversibility:</strong> This is a seed for Level 4 (Relationship) and eventually for more advanced thermodynamic thinking. Introduce it gently. The question to plant: why can some thresholds be reversed and others not? The answer involves the structure of the states on either side — how different they are, how much reorganization the crossing required, whether the path is available in both directions. Don't answer this now. Let it be a live question.</p>
+    <p><strong>The egg:</strong> Use this example with care — it's concrete and funny, but students will ask why. The answer (denaturation of proteins is irreversible under those conditions) is technically correct but goes inside the threshold into molecular structure. That's a useful aside if a student asks; otherwise redirect to the observation: the state before and after are genuinely different, and the field can't run the crossing backward. Some thresholds are one-way passages.</p>
+    <p><strong>Connection to particle (not yet stated):</strong> A stable particle is, in Phase Realism terms, a configuration that hasn't crossed certain thresholds — a pattern in a field that persists because it hasn't been pushed far enough to reorganize. This will be the payoff of Level 3 / the introduction to Level 4. Nothing here names it. But the structural work is being laid.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- ─── Section 3.3 ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-eyebrow">Section 3.3</div>
+    <h2 class="section-title">You've Been Near Thresholds Your Whole Life</h2>
+    <div class="student-text">
+      <p>Here's something that might sound familiar.</p>
+      <p>You've been trying to understand something — a problem, a piece of music, a concept — for a while. You look at it from different angles. You think about it. Nothing seems to be happening. And then — suddenly — you understand it. Not a little bit. Fully. It clicked.</p>
+      <p>That click is a threshold. Something was accumulating — field conditions shifting, structure building — and then, at a point you couldn't predict from below, the whole thing reorganized into understanding. "Not getting it" and "getting it" are not two ends of a spectrum. They are different states. The threshold between them can feel like it arrives from nowhere because you were right up against it without knowing.</p>
+      <p>Or this: you've walked into a room and felt, before anything happened, that something was about to. The people were normal, the conversation was normal — but something in the room was coiled. What you were sensing is real. You were detecting a system near its threshold — not yet across it, but close enough to feel it.</p>
+    </div>
+
+    <div class="key-idea">
+      A system near its threshold has a different quality than a system far from it. You can often feel the difference before the crossing happens.
+    </div>
+
+    <div class="student-text">
+      <p>This state — close to a threshold but not yet across it — has a name: <em>subcritical</em>. Subcritical doesn't mean weak or unimportant. It means: everything is in the current state, and the threshold is approaching.</p>
+      <p>Subcritical systems have their own signature. They're not stable the way a resting system is stable. They're stable in a held way — the way a breath held too long is stable. The threshold is there, not yet crossed, but present.</p>
+      <p>Some people are more sensitive to subcritical states than others. They notice the coil in a room, the tension in a conversation, the edge in a situation that hasn't flipped yet. That sensitivity is a real perceptual ability. What it's reading is real. The subcritical state is a physically distinct condition — different from both "far from threshold" and "already crossed."</p>
+      <p>Thresholds happen at every scale: in water, in crowds, in learning, in bodies, in relationships. The concept is the same. A field condition approaches a critical point. The system holds. Then — if the field keeps moving — everything reorganizes.</p>
+      <p>Once you have this concept, you start to notice it everywhere. That's not you seeing things that aren't there. That's the concept working.</p>
+    </div>
+  </div>
+
+  <!-- Teacher Note 3.3 -->
+  <div class="teacher-note" id="note-3-3">
+    <div class="teacher-note-label">Teacher's Notation — Section 3.3</div>
+    <p><strong>The comprehension-threshold example:</strong> This is pedagogically careful. It validates the experience of sudden understanding without reducing it to neuroscience or dismissing it as mystery. The framework says: something real was accumulating; a threshold was crossed; the new state (comprehension) is genuinely different from the prior state (not-yet-comprehension). Teachers can draw on this example when students hit difficult material — "you might be subcritical right now; that means you're close."</p>
+    <p><strong>Subcritical state — vocabulary and validation:</strong> This is one of the most useful concepts for students whose perceptual life is calibrated toward threshold-sensing. They already notice the coil in a room, the edge in a conversation, the held quality of a situation about to change. Naming this as subcritical detection — and saying explicitly that it is a real perceptual ability reading a real physical condition — is a significant validation for students who have been told they're "too sensitive" or that they're imagining things.</p>
+    <p><strong>"That sensitivity is a real perceptual ability":</strong> This is a direct statement, not hedged. It is appropriate at this level. The framework supports it: subcritical states are physically distinct, they produce different field signatures, and detecting those signatures is an accurate perceptual act. The sensitivity to do this varies between people, and higher sensitivity is not a disorder — it is a calibration difference. This language is consistent with Units 4 and 6, which develop it further.</p>
+    <p><strong>Scale-invariance:</strong> The closing paragraph explicitly states that the threshold concept applies at every scale — water, crowds, learning, bodies, relationships. This is a genuine claim in Phase Realism: the same structural description holds. Students don't need to prove it; they just need to carry the concept into multiple domains and see whether it helps them organize what they observe. The curriculum evaluates this application in the exercises.</p>
+    <p><strong>Watch for:</strong> Students who apply "threshold" to any sudden change, including noise and randomness. The threshold concept requires that something was actually accumulating — field conditions shifting toward a critical point. A random disruption is not a threshold. One sign: subcritical state is not present before a random event, or isn't detectable. The question "was the system near a threshold before this happened?" separates threshold events from surprise events. This distinction matters more at Level 2; at Level 1, it's enough to name it.</p>
+  </div>
+
+  <hr class="section-divider">
+
+  <!-- Vocabulary -->
+  <div class="vocab-box">
+    <div class="vocab-label">Key Words — Chapter 3</div>
+    <ul class="vocab-list">
+      <li><span class="vocab-term">Threshold —</span><span class="vocab-def">the point at which a field condition has shifted far enough that the state reorganizes entirely — not gradually, but all at once</span></li>
+      <li><span class="vocab-term">Subcritical —</span><span class="vocab-def">below the threshold — everything still in the current state, but approaching the crossing point; subcritical systems have a characteristic held quality</span></li>
+      <li><span class="vocab-term">Transition —</span><span class="vocab-def">the passage through a threshold — not the approach, but the crossing itself and the reorganization it produces</span></li>
+      <li><span class="vocab-term">Reversible —</span><span class="vocab-def">a threshold crossing that can be undone by reversing the field conditions; some crossings allow return, some do not</span></li>
+      <li><span class="vocab-term">Sharpness —</span><span class="vocab-def">how sudden the transition is relative to the field change that caused it; some thresholds are instant, some take longer to resolve — sharpness varies</span></li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Vocab -->
+  <div class="teacher-note" id="note-3-vocab">
+    <div class="teacher-note-label">Teacher's Notation — Key Words</div>
+    <p><strong>"Sharpness"</strong> is introduced here as a concept name without yet introducing the operator that measures it. The operator (ΔHV) measures exactly this: the rate of state change relative to the rate of field change at the transition point. A sharp threshold has a very high ΔHV; a soft threshold has a lower one. Students who have "sharpness" in vocabulary are primed to understand what ΔHV measures when it appears.</p>
+    <p><strong>"Subcritical" vs. "supercritical":</strong> Supercritical is not in the student vocabulary yet — above the threshold, in the new state. Some students will ask for the pair; it's fine to name it. Both terms become more useful at Level 2 when field dynamics are studied more formally. At Level 1, subcritical is the important one because it describes the condition that students can detect.</p>
+  </div>
+
+  <!-- Try This -->
+  <div class="try-box">
+    <div class="try-label">Try This</div>
+    <ul class="try-list">
+      <li>Think of something you suddenly understood — not gradually, but in a moment. What do you think was accumulating before the threshold? Can you describe what "not getting it" felt like versus "getting it"? Are they really just two points on a spectrum, or are they different states?</li>
+      <li>Water boils at 100°C (at sea level). Imagine you're heating it one degree at a time, very carefully. Describe what you think you'd observe at 99°C versus 100°C. What changes? What doesn't change until that threshold?</li>
+      <li>Can you recall a moment when you sensed a room or a situation was subcritical — coiled, approaching a change — before the change happened? What were you detecting? What flipped?</li>
+    </ul>
+  </div>
+
+  <!-- Teacher Note: Try This -->
+  <div class="teacher-note" id="note-3-try">
+    <div class="teacher-note-label">Teacher's Notation — Try This</div>
+    <p><strong>Exercise 1</strong> (sudden understanding) is the hardest of the three and the most valuable. Encourage students to take it seriously: "not getting it" and "getting it" should be described as states, not as points on a learning scale. Ask: what changed when the threshold was crossed? What's different about how you relate to the material? Is there anything you can now do that you couldn't before? These questions develop the state-recognition skill from Chapter 1 applied to mental states — and they plant Unit 6 (Sensing) seeds without naming them.</p>
+    <p><strong>Exercise 2</strong> (water heating) is a precision-observation exercise in imagination. The goal: students should be able to say "99°C looks the same as 80°C" and then describe what changes at 100°C. If they say "it starts to bubble at 99," gently ask: is that the threshold, or approaching it? The distinction between approach and crossing is the core pedagogical payoff of this chapter.</p>
+    <p><strong>Exercise 3</strong> (subcritical detection) is personal and should not be pressed if a student doesn't want to share. The instruction "you don't have to share what it is" is deliberate. The exercise works even if the student only reflects privately. Threshold-sensing near interpersonal and social thresholds is often the most vivid application for this age group. Validate the observation without requiring disclosure.</p>
+  </div>
+
+  <!-- Chapter Nav -->
+  <div class="chapter-nav">
+    <span class="nav-next" style="color: var(--fg-muted); font-weight: 400;">← Chapter 2: Fields</span>
+    <span class="nav-position">Chapter 3 · Unit 3 of 6</span>
+    <span class="nav-next">Chapter 4: Relationship →</span>
+  </div>
+
+</div>
+
+<script>
+  const noteIds = [
+    'note-3-1', 'note-3-2', 'note-3-3', 'note-3-vocab', 'note-3-try'
+  ];
+  const btn = document.getElementById('toggleBtn');
+  let visible = true;
+
+  function setNotes(show) {
+    visible = show;
+    noteIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.hidden = !show;
+    });
+    btn.textContent = show ? 'Hide Teacher Notes' : 'Show Teacher Notes';
+    btn.classList.toggle('dimmed', show);
+    try { localStorage.setItem('pr_teacher', show ? '1' : '0'); } catch(e) {}
+  }
+
+  btn.addEventListener('click', () => setNotes(!visible));
+
+  try {
+    const saved = localStorage.getItem('pr_teacher');
+    if (saved === '0') setNotes(false);
+  } catch(e) {}
+</script>
+
+</body></html>
