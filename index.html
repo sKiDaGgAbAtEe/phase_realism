@@ -1,0 +1,326 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Phase Realism — Elementary</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Source+Sans+3:wght@300;400;600;700&display=swap">
+
+<style>
+:root {
+  --bg:             #faf8f4;
+  --bg-alt:         #f2ede6;
+  --fg:             #1c2830;
+  --fg-muted:       #4a5660;
+  --fg-subtle:      #7e8c97;
+  --accent:         #2c5a8a;
+  --accent-lt:      #e8f0f9;
+  --divider:        #ddd8cf;
+  --card-hover:     #f2ede6;
+
+  --font-display:   'Lora', Georgia, serif;
+  --font-body:      'Lora', Georgia, serif;
+  --font-ui:        'Source Sans 3', system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:            #161e25;
+    --bg-alt:        #1c2530;
+    --fg:            #e0d9cf;
+    --fg-muted:      #9eaab5;
+    --fg-subtle:     #607080;
+    --accent:        #5e96cc;
+    --accent-lt:     #1a2c3d;
+    --divider:       #28363e;
+    --card-hover:    #1c2530;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:            #161e25;
+  --bg-alt:        #1c2530;
+  --fg:            #e0d9cf;
+  --fg-muted:      #9eaab5;
+  --fg-subtle:     #607080;
+  --accent:        #5e96cc;
+  --accent-lt:     #1a2c3d;
+  --divider:       #28363e;
+  --card-hover:    #1c2530;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  margin: 0;
+  padding-left:  max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 5rem;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 20;
+  background: var(--bg);
+}
+
+/* ── Header bar ────────────────────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+  border-bottom: 1px solid var(--divider);
+  padding-block: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar-series {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+}
+.topbar-level {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  color: var(--fg-muted);
+}
+
+/* ── Content wrapper ───────────────────────────────────────── */
+.content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-top: 4rem;
+}
+
+/* ── Title block ───────────────────────────────────────────── */
+.title-block {
+  margin-bottom: 3rem;
+}
+.title-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.title-main {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 2.9rem);
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 1.2rem;
+  text-wrap: balance;
+}
+.title-sub {
+  font-size: 1.05rem;
+  color: var(--fg-muted);
+  line-height: 1.7;
+  margin: 0;
+  max-width: 520px;
+}
+.title-rule {
+  border: none;
+  border-top: 1px solid var(--divider);
+  margin: 2.5rem 0;
+}
+
+/* ── TOC list ──────────────────────────────────────────────── */
+.toc-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+  margin-bottom: 1.2rem;
+}
+.toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+.toc-item {
+  border-top: 1px solid var(--divider);
+}
+.toc-item:last-child {
+  border-bottom: 1px solid var(--divider);
+}
+.toc-link {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.35rem 0.5rem;
+  text-decoration: none;
+  color: inherit;
+  border-radius: 4px;
+  transition: background 0.12s;
+}
+.toc-link:hover {
+  background: var(--card-hover);
+}
+.toc-num {
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--fg-subtle);
+  letter-spacing: 0.06em;
+  flex-shrink: 0;
+  width: 2.2rem;
+  text-align: right;
+}
+.toc-body {
+  flex: 1;
+  min-width: 0;
+}
+.toc-title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--fg);
+  display: block;
+  margin-bottom: 0.2rem;
+}
+.toc-desc {
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+.toc-arrow {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-size: 1.1rem;
+  opacity: 0.6;
+  transition: opacity 0.12s, transform 0.12s;
+}
+.toc-link:hover .toc-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+/* ── Footer note ───────────────────────────────────────────── */
+.footer-note {
+  margin-top: 3.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--divider);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  color: var(--fg-subtle);
+  line-height: 1.6;
+}
+</style>
+
+<!-- Top bar -->
+<div class="topbar">
+  <span class="topbar-series">Phase Realism · Elementary</span>
+  <span class="topbar-level">Level 1 — Six Chapters</span>
+</div>
+
+<div class="content">
+
+  <!-- Title -->
+  <div class="title-block">
+    <div class="title-eyebrow">Elementary Curriculum · Level 1</div>
+    <h1 class="title-main">Phase Realism</h1>
+    <p class="title-sub">A six-chapter introduction to reality as phase relationships — beginning with observation, building toward sensing. No prior physics required.</p>
+  </div>
+
+  <hr class="title-rule">
+
+  <!-- TOC -->
+  <div class="toc-label">Chapters</div>
+  <ul class="toc-list">
+
+    <li class="toc-item">
+      <a class="toc-link" href="Phase%20Realism%20%E2%80%94%20Chapter%201_States.html">
+        <span class="toc-num">01</span>
+        <div class="toc-body">
+          <span class="toc-title">States</span>
+          <span class="toc-desc">Everything is in a state. Observation begins by noticing which one.</span>
+        </div>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+
+    <li class="toc-item">
+      <a class="toc-link" href="Phase%20Realism%20%E2%80%94%20Chapter%202_%20Fields.html">
+        <span class="toc-num">02</span>
+        <div class="toc-body">
+          <span class="toc-title">Fields</span>
+          <span class="toc-desc">What sets the conditions that determine a state — the invisible presence you already navigate.</span>
+        </div>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+
+    <li class="toc-item">
+      <a class="toc-link" href="Phase%20Realism%20%E2%80%94%20Chapter%203_%20Thresholds.html">
+        <span class="toc-num">03</span>
+        <div class="toc-body">
+          <span class="toc-title">Thresholds</span>
+          <span class="toc-desc">Why change doesn't happen gradually. Why it waits — and then flips.</span>
+        </div>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+
+    <li class="toc-item">
+      <a class="toc-link" href="Phase%20Realism%20%E2%80%94%20Chapter%204_%20Relationship.html">
+        <span class="toc-num">04</span>
+        <div class="toc-body">
+          <span class="toc-title">Relationship</span>
+          <span class="toc-desc">How two things in proximity alter each other's state — without touching, without trying.</span>
+        </div>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+
+    <li class="toc-item">
+      <a class="toc-link" href="Phase%20Realism%20%E2%80%94%20Chapter%205_%20Coherence.html">
+        <span class="toc-num">05</span>
+        <div class="toc-body">
+          <span class="toc-title">Coherence</span>
+          <span class="toc-desc">What happens when parts align. What alignment produces that no part could produce alone.</span>
+        </div>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+
+    <li class="toc-item">
+      <a class="toc-link" href="Phase%20Realism%20%E2%80%94%20Chapter%206_%20Sensing.html">
+        <span class="toc-num">06</span>
+        <div class="toc-body">
+          <span class="toc-title">Sensing</span>
+          <span class="toc-desc">You are an instrument. This chapter is about learning to read it accurately.</span>
+        </div>
+        <span class="toc-arrow">→</span>
+      </a>
+    </li>
+
+  </ul>
+
+  <!-- Footer -->
+  <div class="footer-note">
+    Level 1 introduces five foundational concepts — state, field, threshold, relationship, coherence — and closes by grounding them in perception. No particle theory. No kinetic energy. Fields are primary throughout.
+  </div>
+
+</div>
+
+</body></html>
